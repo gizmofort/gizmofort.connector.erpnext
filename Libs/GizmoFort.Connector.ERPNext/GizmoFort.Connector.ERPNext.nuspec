@@ -8,7 +8,7 @@
     <owners>GizmoFort Pty Ltd</owners>
     <licenseUrl>https://raw.githubusercontent.com/gizmofort/gizmofort.connector.erpnext/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/gizmofort/gizmofort.connector.erpnext</projectUrl>
-    <iconUrl>http://public.gizmofort.com.au/logo/logo120x120.jpg</iconUrl>
+    <iconUrl>http://public.gizmofort.com.au/logo/logo450x450.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple C# REST API Client for ERPNext. For more information, please refer to project url for more information.</description>
     <releaseNotes>Rename from ERPObject.Parameters to ERPObject.Data</releaseNotes>
