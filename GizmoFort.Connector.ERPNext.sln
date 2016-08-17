@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{CF809A0E-9DA3-45AE-9C6B-2876164DC439}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{080F37E6-82DB-4656-AA7D-AD6104BE44D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GizmoFort.Connector.ERPNext", "Libs\GizmoFort.Connector.ERPNext\GizmoFort.Connector.ERPNext.csproj", "{337CD478-D3C3-44AF-828B-33069B844539}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GizmoFort.Connector.ERPNext.Tests", "Tests\GizmoFort.Connector.ERPNext.Tests\GizmoFort.Connector.ERPNext.Tests.csproj", "{714BEFE8-6325-4B61-8704-CEC198D9146C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{337CD478-D3C3-44AF-828B-33069B844539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{337CD478-D3C3-44AF-828B-33069B844539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{337CD478-D3C3-44AF-828B-33069B844539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{337CD478-D3C3-44AF-828B-33069B844539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714BEFE8-6325-4B61-8704-CEC198D9146C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714BEFE8-6325-4B61-8704-CEC198D9146C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714BEFE8-6325-4B61-8704-CEC198D9146C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714BEFE8-6325-4B61-8704-CEC198D9146C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{337CD478-D3C3-44AF-828B-33069B844539} = {CF809A0E-9DA3-45AE-9C6B-2876164DC439}
+		{714BEFE8-6325-4B61-8704-CEC198D9146C} = {080F37E6-82DB-4656-AA7D-AD6104BE44D4}
+	EndGlobalSection
+EndGlobal

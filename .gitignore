@@ -1,0 +1,8 @@
+/.vs
+/Libs/GizmoFort.Connector.ERPNext/obj/Debug
+/Libs/GizmoFort.Connector.ERPNext/bin/Debug
+/Tests/GizmoFort.Connector.ERPNext.Tests/bin/Debug
+/Tests/GizmoFort.Connector.ERPNext.Tests/obj/Debug
+/_ReSharper.Caches
+/TestResults
+/packages
