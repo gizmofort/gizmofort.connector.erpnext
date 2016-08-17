@@ -1,3 +1,5 @@
+using System;
+
 namespace GizmoFort.Connector.ERPNext.PublicTypes
 {
     public struct DocType

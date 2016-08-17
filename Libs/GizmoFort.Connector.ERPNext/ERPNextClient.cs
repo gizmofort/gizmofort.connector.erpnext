@@ -139,7 +139,7 @@ namespace GizmoFort.Connector.ERPNext
         {
             JsonDeserializer des = new JsonDeserializer();
             DocRaw data_json = des.Deserialize<DocRaw>(response);
-            return new ERPObject(docType, convertToDynamic(data_json.data));
+            return new ERPObject(docType, convertToData(data_json.data));
         }
 
         private static List<ERPObject> parseManyObjects(DocType docType, IRestResponse response)
@@ -147,7 +147,7 @@ namespace GizmoFort.Connector.ERPNext
             JsonDeserializer des = new JsonDeserializer();
             DocRawList data_json = des.Deserialize<DocRawList>(response);
 
-            return data_json.data.Select(x => new ERPObject(docType, convertToDynamic(x))).ToList();
+            return data_json.data.Select(x => new ERPObject(docType, convertToData(x))).ToList();
         }
 
         private static List<string> toFilterObject(ERPFilter filter)
@@ -160,7 +160,7 @@ namespace GizmoFort.Connector.ERPNext
             return result;
         }
 
-        private static dynamic convertToDynamic(Dictionary<string, object> vals)
+        private static ExpandoObject convertToData(Dictionary<string, object> vals)
         {
             ExpandoObject result = new ExpandoObject();
 

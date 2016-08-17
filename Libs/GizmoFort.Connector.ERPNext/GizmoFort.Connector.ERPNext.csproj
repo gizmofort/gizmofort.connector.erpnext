@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\DynamicObjectUtils.cs" />
     <Compile Include="PublicTypes\FetchListOption.cs" />
     <Compile Include="PublicTypes\DocType.cs" />
     <Compile Include="ERPNextClient.cs" />

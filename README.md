@@ -35,6 +35,16 @@ Inserting a Record
 
             client.InsertObject(new_erp_object);
 
+			
+--------------
+Updating a Record
+--------------
+
+            ERPObject updated_data = new ERPObject(DocType.Customer);
+            updated_data.Data.website = "http://new-website.com";
+			
+            client.UpdateObject(DocType.Customer, "John Doe", updated_data);
+
 --------------
 Getting a Record
 --------------
