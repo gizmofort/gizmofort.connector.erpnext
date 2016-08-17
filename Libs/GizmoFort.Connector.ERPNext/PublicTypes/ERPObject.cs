@@ -3,7 +3,7 @@ using GizmoFort.Connector.ERPNext.Utils;
 
 namespace GizmoFort.Connector.ERPNext.PublicTypes
 {
-    public class ERPObject
+    public sealed class ERPObject
     {
         private ExpandoObject data;
         public DocType ObjectType { get; private set; }
