@@ -1,0 +1,1 @@
+nuget pack GizmoFort.Connector.ERPNext.csproj -Prop Configuration=Release
