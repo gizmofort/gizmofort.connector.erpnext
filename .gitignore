@@ -6,3 +6,7 @@
 /_ReSharper.Caches
 /TestResults
 /packages
+/Libs/GizmoFort.Connector.ERPNext/bin/Release
+/Libs/GizmoFort.Connector.ERPNext/obj/Release
+/Tests/GizmoFort.Connector.ERPNext.Tests/bin/Release
+/Tests/GizmoFort.Connector.ERPNext.Tests/obj/Release
