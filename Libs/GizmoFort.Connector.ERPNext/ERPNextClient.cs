@@ -53,7 +53,7 @@ namespace GizmoFort.Connector.ERPNext
         {
             RestRequest request = new RestRequest($"/api/resource/{obj.ObjectType}", Method.POST);
 
-            var args_text = SerializeUtils.ToString(obj.Parameters);
+            var args_text = SerializeUtils.ToString(obj.Data);
             request.AddParameter("data", args_text);
 
             var response = this.client.Execute(request);
@@ -77,7 +77,7 @@ namespace GizmoFort.Connector.ERPNext
         public ERPObject UpdateObject(DocType docType, string name, ERPObject doc)
         {
             RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.PUT);
-            var args_text = SerializeUtils.ToString(doc.Parameters);
+            var args_text = SerializeUtils.ToString(doc.Data);
             request.AddParameter("data", args_text);
 
             var response = this.client.Execute(request);

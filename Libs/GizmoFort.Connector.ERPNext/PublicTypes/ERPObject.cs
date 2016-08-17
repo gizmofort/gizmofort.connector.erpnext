@@ -2,15 +2,15 @@
 
 namespace GizmoFort.Connector.ERPNext.PublicTypes
 {
-    public sealed class ERPObject
+    public class ERPObject
     {
         public DocType ObjectType { get; private set; }
-        public dynamic Parameters { get; set; }
+        public dynamic Data { get; set; }
 
-        public ERPObject(DocType objectType, dynamic parameters)
+        public ERPObject(DocType objectType, dynamic data)
         {
             this.ObjectType = objectType;
-            this.Parameters = parameters;
+            this.Data = data;
         }
 
         public ERPObject(DocType objectType) 

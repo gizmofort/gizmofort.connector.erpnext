@@ -11,6 +11,6 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
             this.Object = obj;
         }
 
-        protected dynamic parameters => Object.Parameters;
+        protected dynamic data => Object.Data;
     }
 }

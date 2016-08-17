@@ -43,12 +43,12 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
             var documents = client.ListObjects(DocType.Customer, listOption);
 
             Assert.IsTrue(documents.Count == 1, "Customer result is not one");
-            Assert.IsTrue(documents[0].Parameters.name == test_customer_name, "Customer name is invalid");
-            Assert.IsTrue(documents[0].Parameters.website == test_customer_website, "Customer website is invalid");
+            Assert.IsTrue(documents[0].Data.name == test_customer_name, "Customer name is invalid");
+            Assert.IsTrue(documents[0].Data.website == test_customer_website, "Customer website is invalid");
 
             var full_customer_object = client.GetObject(DocType.Customer, test_customer_name);
-            Assert.IsTrue(full_customer_object.Parameters.name == test_customer_name, "Customer name is invalid");
-            Assert.IsTrue(full_customer_object.Parameters.website == test_customer_website, "Customer website is invalid");
+            Assert.IsTrue(full_customer_object.Data.name == test_customer_name, "Customer name is invalid");
+            Assert.IsTrue(full_customer_object.Data.website == test_customer_website, "Customer website is invalid");
 
             ERPCustomer customer = new ERPCustomer(full_customer_object);
             Assert.IsTrue(customer.customer_name == test_customer_name, "Customer name is invalid");

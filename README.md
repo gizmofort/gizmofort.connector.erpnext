@@ -27,11 +27,11 @@ Inserting a Record
 --------------
 			
             ERPObject new_erp_object = new ERPObject(DocType.Customer);
-            new_erp_object.Parameters.customer_type = "Individual";
-            new_erp_object.Parameters.customer_name = "John Doe";
-            new_erp_object.Parameters.customer_group = "Individual";
-            new_erp_object.Parameters.website = "http://yourcustomerwebsite.com";
-            new_erp_object.Parameters.territory = "Australia";
+            new_erp_object.Data.customer_type = "Individual";
+            new_erp_object.Data.customer_name = "John Doe";
+            new_erp_object.Data.customer_group = "Individual";
+            new_erp_object.Data.website = "http://yourcustomerwebsite.com";
+            new_erp_object.Data.territory = "Australia";
 
             client.InsertObject(new_erp_object);
 
@@ -40,7 +40,7 @@ Getting a Record
 --------------
 
             ERPObject customer_object = client.GetObject(DocType.Customer, "John Doe");
-            string customer_website = customer_object.Parameters.website;
+            string customer_website = customer_object.Data.website;
 
 --------------
 Listing Records

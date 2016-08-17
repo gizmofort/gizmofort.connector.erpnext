@@ -11,38 +11,38 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
 
         public CustomerType customer_type
         {
-            get { return EnumUtils.Parse<CustomerType>(parameters.customer_type); }
-            set { parameters.customer_type = value.ToString(); }
+            get { return EnumUtils.Parse<CustomerType>(data.customer_type); }
+            set { data.customer_type = value.ToString(); }
         }
 
         public string customer_name
         {
-            get { return parameters.customer_name; }
-            set { parameters.customer_name = value; }
+            get { return data.customer_name; }
+            set { data.customer_name = value; }
         }
 
         public string customer_group
         {
-            get { return parameters.customer_group; }
-            set { parameters.customer_group = value; }
+            get { return data.customer_group; }
+            set { data.customer_group = value; }
         }
 
         public string website
         {
-            get { return parameters.website; }
-            set { parameters.website = value; }
+            get { return data.website; }
+            set { data.website = value; }
         }
 
         public string territory
         {
-            get { return parameters.territory; }
-            set { parameters.territory = value; }
+            get { return data.territory; }
+            set { data.territory = value; }
         }
 
         public CustomerStatus status
         {
-            get { return EnumUtils.Parse<CustomerStatus>(parameters.status); }
-            set { parameters.status = value.ToString(); }
+            get { return EnumUtils.Parse<CustomerStatus>(data.status); }
+            set { data.status = value.ToString(); }
         }
     }
 
