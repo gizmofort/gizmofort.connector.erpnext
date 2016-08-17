@@ -1,6 +1,18 @@
 # gizmofort.connector.erpnext
 Simple C# REST API Client for ERPNext
 
+
+--------------
+Recommended Installation
+--------------
+
+Use Nuget:
+
+			Install-Package GizmoFort.Connector.ERPNext.dll
+
+or git-clone, compile.
+			
+			
 --------------
 General Usage
 --------------
