@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GizmoFort.Connector.ERPNext.dll</id>
+    <version>1.0.0</version>
+    <title>Simple C# REST API Client for ERPNext</title>
+    <authors>GizmoFort Pty Ltd</authors>
+    <owners>GizmoFort Pty Ltd</owners>
+    <licenseUrl>https://raw.githubusercontent.com/gizmofort/gizmofort.connector.erpnext/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/gizmofort/gizmofort.connector.erpnext</projectUrl>
+    <iconUrl>http://public.gizmofort.com.au/logo/logo120x120.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple C# REST API Client for ERPNext. For more information, please refer to </description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2016 - felixtjung@gizmofort</copyright>
+    <tags>C# ERPNext REST API</tags>
+  </metadata>
+</package>
