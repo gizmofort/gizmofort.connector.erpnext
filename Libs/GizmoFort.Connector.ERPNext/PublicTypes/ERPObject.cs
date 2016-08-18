@@ -5,8 +5,8 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
 {
     public sealed class ERPObject
     {
-        private ExpandoObject data;
         public DocType ObjectType { get; private set; }
+        private ExpandoObject data;
 
         public ERPObject(DocType objectType) 
             : this(objectType, new ExpandoObject()) { }
@@ -21,6 +21,12 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
         {
             get { return data; }
             set { data = value; }
+        }
+
+        public string Name
+        {
+            get { return Data.name; }
+            set { Data.name = value; }
         }
 
         public ERPObject Clone()

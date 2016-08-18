@@ -44,16 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PublicInterfaces\SubServices\CustomerService.cs" />
+    <Compile Include="PublicInterfaces\ERPNextServices.cs" />
+    <Compile Include="PublicInterfaces\SubServices\ISubServiceBase.cs" />
+    <Compile Include="PublicInterfaces\SubServices\SubServiceBase.cs" />
     <Compile Include="PublicTypes\ERPException.cs" />
     <Compile Include="Utils\DynamicObjectUtils.cs" />
     <Compile Include="PublicTypes\FetchListOption.cs" />
     <Compile Include="PublicTypes\DocType.cs" />
-    <Compile Include="ERPNextClient.cs" />
+    <Compile Include="PublicInterfaces\ERPNextClient.cs" />
     <Compile Include="PublicTypes\ERPFilter.cs" />
     <Compile Include="InternalTypes\DocRawList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\SerializeUtils.cs" />
-    <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="WrapperTypes\ERPCustomer.cs" />
     <Compile Include="PublicTypes\ERPObject.cs" />
     <Compile Include="WrapperTypes\WrapperObjectBase.cs" />

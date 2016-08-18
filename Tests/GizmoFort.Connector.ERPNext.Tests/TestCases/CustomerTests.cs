@@ -12,7 +12,7 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
         [TestMethod()]
         public void CustomerFull()
         {
-            var client = TestConstants.CreateClient();
+            var client = TestUtils.CreateClient();
 
             string test_customer_name = Guid.NewGuid().ToString();
             string test_customer_website = Guid.NewGuid().ToString();

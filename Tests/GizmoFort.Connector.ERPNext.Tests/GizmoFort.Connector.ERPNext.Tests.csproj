@@ -52,10 +52,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PublicInterfaces\SubServices\CustomerServiceTests.cs" />
     <Compile Include="TestCases\AutoLoginTests.cs" />
     <Compile Include="TestCases\CustomerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestConstants.cs" />
+    <Compile Include="Constants\TestConstants.cs" />
+    <Compile Include="Constants\TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\GizmoFort.Connector.ERPNext\GizmoFort.Connector.ERPNext.csproj">

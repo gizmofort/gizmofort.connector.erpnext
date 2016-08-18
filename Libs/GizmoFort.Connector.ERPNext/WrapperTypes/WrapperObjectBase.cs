@@ -6,7 +6,11 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
 {
     public abstract class WrapperObjectBase
     {
-        public ERPObject Object { get; private set; }
+        public ERPObject Object { get; internal set; }
+
+        internal WrapperObjectBase()
+        {
+        }
 
         protected WrapperObjectBase(ERPObject obj)
         {
@@ -14,6 +18,14 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
         }
 
         protected dynamic data => Object.Data;
+
+        public string Name
+        {
+            get { return Object.Name; }
+            set { Object.Name = value; }
+        }
+
+        public DocType ObjectType => Object.ObjectType;
 
         protected static T parseEnum<T>(string enumString)
         {

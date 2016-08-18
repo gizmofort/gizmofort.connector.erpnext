@@ -10,7 +10,7 @@ using RestSharp;
 using RestSharp.Deserializers;
 using RestRequest = RestSharp.RestRequest;
 
-namespace GizmoFort.Connector.ERPNext
+namespace GizmoFort.Connector.ERPNext.PublicInterfaces
 {
     public class ERPNextClient : IDisposable
     {
@@ -105,17 +105,26 @@ namespace GizmoFort.Connector.ERPNext
 
             var response = this.client.Execute(request);
 
+            if (response.StatusCode == HttpStatusCode.NotFound) {
+                return null;
+            }
+
             assertResponseIsOK(response);
 
             return parseOneObject(docType, response);
         }
 
-        public ERPObject UpdateObject(DocType docType, string name, ERPObject doc)
+        public ERPObject UpdateObject(ERPObject obj)
+        {
+            return UpdateObject(obj.ObjectType, obj.Name, obj);
+        }
+
+        public ERPObject UpdateObject(DocType docType, string name, ERPObject obj)
         {
             loginIfNeeded();
 
             RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.PUT);
-            var args_text = SerializeUtils.ToString(doc.Data);
+            var args_text = SerializeUtils.ToString(obj.Data);
             request.AddParameter("data", args_text);
 
             var response = this.client.Execute(request);

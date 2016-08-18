@@ -1,4 +1,5 @@
-﻿using GizmoFort.Connector.ERPNext.PublicTypes;
+﻿using System;
+using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Utils;
 
 namespace GizmoFort.Connector.ERPNext.WrapperTypes
@@ -18,7 +19,11 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
         public string customer_name
         {
             get { return data.customer_name; }
-            set { data.customer_name = value; }
+            set
+            {
+                data.customer_name = value;
+                data.name = value;
+            }
         }
 
         public string customer_group
