@@ -7,7 +7,6 @@ using GizmoFort.Connector.ERPNext.InternalTypes;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Utils;
 using RestSharp;
-using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 using RestRequest = RestSharp.RestRequest;
 
@@ -254,7 +253,7 @@ namespace GizmoFort.Connector.ERPNext
                 case HttpStatusCode.Accepted:
                     break;
                 default:
-                    throw new ArgumentException(response.Content);
+                    throw new ERPException($"ErrorCode: {response.StatusCode.ToString()}\r\n\r\nDescription:\r\n{response.StatusDescription}\r\n\r\nReason:\r\n" + response.Content + "\r\n");
             }
         }
 
