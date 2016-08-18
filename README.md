@@ -91,7 +91,7 @@ Deleting a Record
 Strong typed ERPNext specific type - ERPCustomer has been partially implemented
 --------------
 
-            ERPNextServices service = new ERPNextServices("https://your.erpnext.com", "username", "password");
+            ERPNextServiceCollection service = new ERPNextServiceCollection("https://your.erpnext.com", "username", "password");
 			
             CustomerService customer_service = service.Customer;
 
