@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using GizmoFort.Connector.ERPNext.ERPTypes.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
 
 namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices
 {
-    public abstract class SubServiceBase<T> : ISubServiceBase<T> where T : WrapperObjectBase
+    public abstract class SubServiceBase<T> : ISubServiceBase<T> where T : ERPNextObjectBase
     {
         public DocType ObjectType { get; }
         protected readonly ERPNextClient _client;

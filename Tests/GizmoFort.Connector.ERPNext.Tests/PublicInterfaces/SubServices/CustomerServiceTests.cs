@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GizmoFort.Connector.ERPNext.ERPTypes.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Tests;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
@@ -17,8 +18,8 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices.Tests
         [TestMethod()]
         public void CustomerServiceTest()
         {
-            var service = TestUtils.CreateService();
-            var customer_service = service.Customer;
+            ERPNextServiceCollection serviceCollection = TestUtils.CreateService();
+            CustomerService customer_service = serviceCollection.Customer;
 
             string test_customer_name = Guid.NewGuid().ToString();
             string test_customer_website = Guid.NewGuid().ToString();

@@ -9,9 +9,9 @@ namespace GizmoFort.Connector.ERPNext.Tests
             return new ERPNextClient(TestConstants.TEST_DOMAIN, TestConstants.TEST_USERNAME, TestConstants.TEST_PASSWORD);
         }
 
-        public static ERPNextServices CreateService()
+        public static ERPNextServiceCollection CreateService()
         {
-            return new ERPNextServices(TestConstants.TEST_DOMAIN, TestConstants.TEST_USERNAME, TestConstants.TEST_PASSWORD);
+            return new ERPNextServiceCollection(TestConstants.TEST_DOMAIN, TestConstants.TEST_USERNAME, TestConstants.TEST_PASSWORD);
         }
     }
 }

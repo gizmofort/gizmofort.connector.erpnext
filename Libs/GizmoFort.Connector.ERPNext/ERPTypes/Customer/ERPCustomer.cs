@@ -1,14 +1,12 @@
-﻿using System;
-using GizmoFort.Connector.ERPNext.PublicTypes;
-using GizmoFort.Connector.ERPNext.Utils;
+﻿using GizmoFort.Connector.ERPNext.PublicTypes;
+using GizmoFort.Connector.ERPNext.WrapperTypes;
 
-namespace GizmoFort.Connector.ERPNext.WrapperTypes
+namespace GizmoFort.Connector.ERPNext.ERPTypes.Customer
 {
-    public class ERPCustomer : WrapperObjectBase
+    public class ERPCustomer : ERPNextObjectBase
     {
-        public ERPCustomer(ERPObject obj) : base(obj) { }
-
         public ERPCustomer() : this(new ERPObject(DocType.Customer)) { }
+        public ERPCustomer(ERPObject obj) : base(obj) { }
 
         public CustomerType customer_type
         {
@@ -46,7 +44,7 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
 
         public CustomerStatus status
         {
-            get { return parseEnum<CustomerType>(data.status); }
+            get { return parseEnum<CustomerStatus>(data.status); }
             set { data.status = value.ToString(); }
         }
     }

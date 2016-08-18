@@ -4,15 +4,15 @@ using GizmoFort.Connector.ERPNext.Utils;
 
 namespace GizmoFort.Connector.ERPNext.WrapperTypes
 {
-    public abstract class WrapperObjectBase
+    public abstract class ERPNextObjectBase
     {
         public ERPObject Object { get; internal set; }
 
-        internal WrapperObjectBase()
+        internal ERPNextObjectBase()
         {
         }
 
-        protected WrapperObjectBase(ERPObject obj)
+        protected ERPNextObjectBase(ERPObject obj)
         {
             this.Object = obj;
         }

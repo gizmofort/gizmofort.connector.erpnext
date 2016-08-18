@@ -1,7 +1,8 @@
+using GizmoFort.Connector.ERPNext.PublicInterfaces;
+using GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices;
 using GizmoFort.Connector.ERPNext.PublicTypes;
-using GizmoFort.Connector.ERPNext.WrapperTypes;
 
-namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices
+namespace GizmoFort.Connector.ERPNext.ERPTypes.Customer
 {
     public class CustomerService : SubServiceBase<ERPCustomer>
     {

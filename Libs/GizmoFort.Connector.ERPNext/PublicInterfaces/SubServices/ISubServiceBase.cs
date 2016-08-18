@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using GizmoFort.Connector.ERPNext.ERPTypes.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
 
 namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices
 {
-    public interface ISubServiceBase<T> where T : WrapperObjectBase
+    public interface ISubServiceBase<T> where T : ERPNextObjectBase
     {
         DocType ObjectType { get; }
         void Create(ERPCustomer newObject);

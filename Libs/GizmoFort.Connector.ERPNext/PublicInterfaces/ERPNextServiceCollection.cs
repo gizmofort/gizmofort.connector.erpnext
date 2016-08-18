@@ -1,13 +1,14 @@
+using GizmoFort.Connector.ERPNext.ERPTypes.Customer;
 using GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices;
 
 namespace GizmoFort.Connector.ERPNext.PublicInterfaces
 {
-    public class ERPNextServices
+    public class ERPNextServiceCollection
     {
         private readonly ERPNextClient _client;
         public CustomerService Customer { get; }
 
-        public ERPNextServices(string domain, string username, string password)
+        public ERPNextServiceCollection(string domain, string username, string password)
         {
             this._client = new ERPNextClient(domain, username, password);
             this.Customer = new CustomerService(_client);
