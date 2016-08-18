@@ -10,20 +10,9 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
     public class CustomerTests
     {
         [TestMethod()]
-        public void Login()
-        {
-            var client = TestConstants.CreateClient();
-            client.Login(TestConstants.TEST_USERNAME, TestConstants.TEST_PASSWORD);
-
-            var active_username = client.GetActiveUserName();
-            Assert.IsTrue(active_username == TestConstants.TEST_USERNAME);
-        }
-
-        [TestMethod()]
         public void CustomerFull()
         {
             var client = TestConstants.CreateClient();
-            client.Login(TestConstants.TEST_USERNAME, TestConstants.TEST_PASSWORD);
 
             string test_customer_name = Guid.NewGuid().ToString();
             string test_customer_website = Guid.NewGuid().ToString();

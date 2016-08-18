@@ -7,6 +7,7 @@ using GizmoFort.Connector.ERPNext.InternalTypes;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Utils;
 using RestSharp;
+using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 using RestRequest = RestSharp.RestRequest;
 
@@ -14,32 +15,64 @@ namespace GizmoFort.Connector.ERPNext
 {
     public class ERPNextClient : IDisposable
     {
+        private string _domain;
+        private string _username;
+        private string _password;
         private RestClient client;
+
+        #region Constructor
 
         public ERPNextClient(string domain)
         {
+            _domain = domain;
             this.client = new RestClient(domain);
             this.client.CookieContainer = new CookieContainer();
         }
 
+        public ERPNextClient(string domain, string username, string password) : this(domain)
+        {
+            this.Login(username, password);
+        }
+
+        #endregion
+
+        #region Dispose
+
         public void Dispose()
         {
+            this._domain = this._username = this._password = null;
             this.client.ClearHandlers();
             this.client.CookieContainer = null;
         }
 
+        #endregion
+
         public void Login(string username, string password)
         {
-            IRestRequest request = new RestRequest("/api/method/login", Method.POST);
-            request.AddParameter("usr", username);
-            request.AddParameter("pwd", password);
-            var response = this.client.Execute(request);
+            this._username = username;
+            this._password = password;
+            this.client.CookieContainer = new CookieContainer();
 
-            assertResponseIsOK(response);
+            loginIfNeeded();
+        }
+
+        public bool IsLoggedIn
+        {
+            get {
+                CookieCollection collection = this.client.CookieContainer.GetCookies(new Uri(this._domain));
+                Cookie session_cookie = collection["sid"];
+                if (session_cookie != null) {
+                    bool is_cookie_active = DateTime.Now < session_cookie.Expires;
+                    return is_cookie_active;
+                }
+                return false;
+            }
         }
 
         public string GetActiveUserName()
         {
+            loginIfNeeded();
+
             IRestRequest request = new RestRequest("/api/method/frappe.auth.get_logged_user", Method.GET);
             var response = this.client.Execute(request);
 
@@ -51,6 +84,8 @@ namespace GizmoFort.Connector.ERPNext
 
         public ERPObject InsertObject(ERPObject obj)
         {
+            loginIfNeeded();
+
             RestRequest request = new RestRequest($"/api/resource/{obj.ObjectType}", Method.POST);
 
             var args_text = SerializeUtils.ToString(obj.Data);
@@ -65,6 +100,8 @@ namespace GizmoFort.Connector.ERPNext
 
         public ERPObject GetObject(DocType docType, string name)
         {
+            loginIfNeeded();
+
             RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.GET);
 
             var response = this.client.Execute(request);
@@ -76,6 +113,8 @@ namespace GizmoFort.Connector.ERPNext
 
         public ERPObject UpdateObject(DocType docType, string name, ERPObject doc)
         {
+            loginIfNeeded();
+
             RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.PUT);
             var args_text = SerializeUtils.ToString(doc.Data);
             request.AddParameter("data", args_text);
@@ -89,6 +128,8 @@ namespace GizmoFort.Connector.ERPNext
 
         public void DeleteObject(DocType docType, string name)
         {
+            loginIfNeeded();
+
             RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.DELETE);
 
             var response = this.client.Execute(request);
@@ -98,6 +139,8 @@ namespace GizmoFort.Connector.ERPNext
 
         public List<ERPObject> ListObjects(DocType docType, FetchListOption listOption = null)
         {
+            loginIfNeeded();
+
             listOption = listOption ?? new FetchListOption();
             RestRequest request = new RestRequest($"/api/resource/{docType}", Method.GET);
 
@@ -126,6 +169,8 @@ namespace GizmoFort.Connector.ERPNext
 
             return parseManyObjects(docType, response);
         }
+
+        #region Helper Methods
 
         private static string parseMessage(IRestResponse response)
         {
@@ -164,14 +209,42 @@ namespace GizmoFort.Connector.ERPNext
         {
             ExpandoObject result = new ExpandoObject();
 
-            var iface = (IDictionary<string, object>)result;
+            var iface = (IDictionary<string, object>) result;
 
-            foreach (var pair in vals) {
+            foreach (var pair in vals)
+            {
                 iface[pair.Key] = pair.Value;
             }
 
             return result;
         }
+
+        #region Login specific
+
+        private void loginIfNeeded()
+        {
+            if (!IsLoggedIn)
+            {
+                doLogin();
+            }
+        }
+
+        private void doLogin()
+        {
+            if (string.IsNullOrEmpty(_username)) return;
+            if (string.IsNullOrEmpty(_password)) return;
+
+            IRestRequest request = new RestRequest("/api/method/login", Method.POST);
+            request.AddParameter("usr", _username);
+            request.AddParameter("pwd", _password);
+            var response = this.client.Execute(request);
+
+            assertResponseIsOK(response);
+
+            bool result = IsLoggedIn;
+        }
+
+        #endregion
 
         private static void assertResponseIsOK(IRestResponse response)
         {
@@ -184,5 +257,7 @@ namespace GizmoFort.Connector.ERPNext
                     throw new ArgumentException(response.Content);
             }
         }
+
+        #endregion
     }
 }

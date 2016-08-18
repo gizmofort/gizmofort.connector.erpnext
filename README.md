@@ -3,6 +3,14 @@ Simple C# REST API Client for ERPNext
 
 
 --------------
+Features
+--------------
+
+* Easy to use API
+* Auto-login
+* Dynamic attributes allow to use whole erpnext system.
+
+--------------
 Recommended Installation
 --------------
 
@@ -17,8 +25,7 @@ or git-clone, compile.
 General Usage
 --------------
 
-            var client = new ERPNextClient("https://your.erpnext.com");
-            client.Login("username", "password");
+            var client = new ERPNextClient("https://your.erpnext.com", "username", "password");
 
             var active_username = client.GetActiveUserName();
 
