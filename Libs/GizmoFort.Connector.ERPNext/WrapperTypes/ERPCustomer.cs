@@ -11,7 +11,7 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
 
         public CustomerType customer_type
         {
-            get { return EnumUtils.Parse<CustomerType>(data.customer_type); }
+            get { return parseEnum<CustomerType>(data.customer_type); }
             set { data.customer_type = value.ToString(); }
         }
 
@@ -41,7 +41,7 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
 
         public CustomerStatus status
         {
-            get { return EnumUtils.Parse<CustomerStatus>(data.status); }
+            get { return parseEnum<CustomerType>(data.status); }
             set { data.status = value.ToString(); }
         }
     }
