@@ -100,7 +100,7 @@ Deleting a Record
 Strong typed ERPNext specific type - ERPCustomer has been partially implemented
 --------------
 
-            ERPNextServiceCollection service = new ERPNextServiceCollection("https://your.erpnext.com", "username", "password");
+            ERPNextServices service = new ERPNextServices("https://your.erpnext.com", "username", "password");
 			
             CustomerService customer_service = service.Customer;
 
@@ -171,14 +171,14 @@ Step 2: Extends New_ERP_Service from SubServiceBase<New_ERP_Object_Type>. For ex
         }
     }
 
-Step 3: Add your new service to class ERPNextServiceCollection.
+Step 3: Add your new service to class ERPNextServices.
 
-    public class ERPNextServiceCollection
+    public class ERPNextServices
     {
         private readonly ERPNextClient _client;
         public CustomerService Customer { get; }
 		
-        public ERPNextServiceCollection(string domain, string username, string password)
+        public ERPNextServices(string domain, string username, string password)
         {
             this._client = new ERPNextClient(domain, username, password);
             this.Customer = new CustomerService(_client);

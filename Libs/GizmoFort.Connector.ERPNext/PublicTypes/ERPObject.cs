@@ -1,4 +1,6 @@
-﻿using System.Dynamic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
 using GizmoFort.Connector.ERPNext.Utils;
 
 namespace GizmoFort.Connector.ERPNext.PublicTypes
@@ -27,6 +29,18 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
         {
             get { return Data.name; }
             set { Data.name = value; }
+        }
+
+        public bool TryGetValue(string propertyName, out object val)
+        {
+            var dict = (IDictionary<string, object>)data;
+            return dict.TryGetValue(propertyName, out val);
+        }
+
+        public object GetValue(string propertyName)
+        {
+            var dict = (IDictionary<string, object>)data;
+            return dict[propertyName];
         }
 
         public ERPObject Clone()

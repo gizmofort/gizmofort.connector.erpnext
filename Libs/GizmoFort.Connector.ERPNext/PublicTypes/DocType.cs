@@ -4,8 +4,6 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
 {
     public struct DocType
     {
-        public static readonly DocType Customer = new DocType("Customer");
-
         #region Internal
 
         public string Name { get; }
@@ -36,7 +34,7 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
 
         public bool Equals(DocType other)
         {
-            return string.Equals(Name, other.Name);
+            return String.Equals(Name, other.Name);
         }
 
         public override bool Equals(object obj)
@@ -51,5 +49,17 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
         }
 
         #endregion
+
+        public static readonly DocType Customer = new DocType("Customer");
+        public static readonly DocType Item = new DocType("Item");
+        public static readonly DocType StockLedgerEntry = new DocType("Stock Ledger Entry");
+        public static readonly DocType User = new DocType("User");
+        public static readonly DocType PurchaseInvoice = new DocType("Purchase Invoice");
+        public static readonly DocType SalesInvoice = new DocType("Sales Invoice");
+        public static readonly DocType SalesInvoicePayment = new DocType("Sales Invoice Payment");
+        public static readonly DocType Warehouse = new DocType("Warehouse");
+        public static readonly DocType PaymentEntry = new DocType("Payment Entry");
+
+
     }
 }

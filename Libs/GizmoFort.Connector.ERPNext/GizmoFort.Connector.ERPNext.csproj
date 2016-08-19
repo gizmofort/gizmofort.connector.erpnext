@@ -45,20 +45,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ERPTypes\Customer\CustomerService.cs" />
-    <Compile Include="PublicInterfaces\ERPNextServiceCollection.cs" />
-    <Compile Include="PublicInterfaces\SubServices\ISubServiceBase.cs" />
-    <Compile Include="PublicInterfaces\SubServices\SubServiceBase.cs" />
-    <Compile Include="PublicTypes\ERPException.cs" />
-    <Compile Include="Utils\DynamicObjectUtils.cs" />
-    <Compile Include="PublicTypes\FetchListOption.cs" />
-    <Compile Include="PublicTypes\DocType.cs" />
-    <Compile Include="PublicInterfaces\ERPNextClient.cs" />
-    <Compile Include="PublicTypes\ERPFilter.cs" />
+    <Compile Include="ERPTypes\Customer\ERPCustomer.cs" />
+    <Compile Include="ERPTypes\Item\ERPItem.cs" />
+    <Compile Include="ERPTypes\Item\ItemService.cs" />
+    <Compile Include="ERPTypes\Warehouse\ERPWarehouse.cs" />
+    <Compile Include="ERPTypes\Warehouse\WarehouseService.cs" />
     <Compile Include="InternalTypes\DocRawList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\SerializeUtils.cs" />
-    <Compile Include="ERPTypes\Customer\ERPCustomer.cs" />
+    <Compile Include="PublicInterfaces\ERPNextClient.cs" />
+    <Compile Include="PublicInterfaces\ERPNextServices.cs" />
+    <Compile Include="PublicInterfaces\SubServices\ISubServiceBase.cs" />
+    <Compile Include="PublicInterfaces\SubServices\SubServiceBase.cs" />
+    <Compile Include="PublicTypes\DocType.cs" />
+    <Compile Include="PublicTypes\ERPException.cs" />
+    <Compile Include="PublicTypes\ERPFilter.cs" />
     <Compile Include="PublicTypes\ERPObject.cs" />
+    <Compile Include="PublicTypes\FetchListOption.cs" />
+    <Compile Include="Utils\DynamicObjectUtils.cs" />
+    <Compile Include="Utils\SerializeUtils.cs" />
     <Compile Include="WrapperTypes\ERPNextObjectBase.cs" />
   </ItemGroup>
   <ItemGroup>

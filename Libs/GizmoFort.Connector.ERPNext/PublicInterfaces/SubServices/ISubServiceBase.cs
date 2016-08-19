@@ -8,10 +8,11 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices
     public interface ISubServiceBase<T> where T : ERPNextObjectBase
     {
         DocType ObjectType { get; }
-        void Create(ERPCustomer newObject);
+        T Create(T obj);
         T Get(string name);
-        List<string> ListNames(List<ERPFilter> filters);
-        void Update(ERPCustomer customer);
+        List<string> ListNames(List<ERPFilter> filters, int pageSize = 0, int pageStartIndex = 0);
+        List<ERPObject> ListObjects(FetchListOption listOption);
+        void Update(T obj);
         void Delete(string name);
     }
 }

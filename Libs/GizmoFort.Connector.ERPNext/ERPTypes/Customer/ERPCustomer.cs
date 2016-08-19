@@ -8,6 +8,16 @@ namespace GizmoFort.Connector.ERPNext.ERPTypes.Customer
         public ERPCustomer() : this(new ERPObject(DocType.Customer)) { }
         public ERPCustomer(ERPObject obj) : base(obj) { }
 
+        public static ERPCustomer Create(string fullName, CustomerType customerType, string customerGroup, string territory)
+        {
+            ERPCustomer obj = new ERPCustomer();
+            obj.customer_name = fullName;
+            obj.customer_type = customerType;
+            obj.customer_group = customerGroup;
+            obj.territory = territory;
+            return obj;
+        }
+
         public CustomerType customer_type
         {
             get { return parseEnum<CustomerType>(data.customer_type); }

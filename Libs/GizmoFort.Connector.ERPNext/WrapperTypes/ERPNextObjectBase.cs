@@ -19,7 +19,7 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
 
         protected dynamic data => Object.Data;
 
-        public string Name
+        public string name
         {
             get { return Object.Name; }
             set { Object.Name = value; }
