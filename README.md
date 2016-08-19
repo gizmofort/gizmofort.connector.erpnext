@@ -31,6 +31,15 @@ General Usage
             var active_username = client.GetActiveUserName();
 
 --------------
+RPC - Remote Procedural Call
+--------------
+
+            // you can also pass parameters like this: 
+			// dynamic data = client.RPC("yourMethod", Method.POST, new { arg1 = "val1", arg2 = "val2" });
+            dynamic data = client.RPC("frappe.auth.get_logged_user", Method.GET);
+            string active_username = data.message;
+
+--------------
 Inserting a Record
 --------------
 			
