@@ -17,7 +17,7 @@ Recommended Installation
 
 Use Nuget:
 
-			Install-Package GizmoFort.Connector.ERPNext.dll
+			Install-Package GizmoFort.Connector.ERPNext
 
 or git-clone, compile.
 			

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>GizmoFort.Connector.ERPNext.dll</id>
-    <version>1.0.6</version>
+    <id>GizmoFort.Connector.ERPNext</id>
+    <version>1.0.7</version>
     <title>Simple C# REST API Client for ERPNext</title>
     <authors>GizmoFort Pty Ltd</authors>
     <owners>GizmoFort Pty Ltd</owners>
