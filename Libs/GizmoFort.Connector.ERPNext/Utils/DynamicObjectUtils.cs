@@ -8,8 +8,8 @@ namespace GizmoFort.Connector.ERPNext.Utils
         public static ExpandoObject CloneObject(ExpandoObject source)
         {
             ExpandoObject target = new ExpandoObject();
-            var target_iface = (IDictionary<string, object>)target;
-            foreach (var kvp in (IDictionary<string, object>)source) {
+            var target_iface = (IDictionary<string, object?>)target;
+            foreach (var kvp in (IDictionary<string, object?>)source) {
                 target_iface.Add(kvp);
             }
 

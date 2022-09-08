@@ -1,0 +1,166 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Tests\\GizmoFort.Connector.ERPNext.Tests\\GizmoFort.Connector.ERPNext.Tests.csproj": {}
+  },
+  "projects": {
+    "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\GizmoFort.Connector.ERPNext.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\GizmoFort.Connector.ERPNext.csproj",
+        "projectName": "GizmoFort.Connector.ERPNext",
+        "projectPath": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\GizmoFort.Connector.ERPNext.csproj",
+        "packagesPath": "C:\\Users\\Jerrill\\.nuget\\packages\\",
+        "outputPath": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Jerrill\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "RestSharp": {
+              "target": "Package",
+              "version": "[108.0.1, )"
+            },
+            "System.Data.DataSetExtensions": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Tests\\GizmoFort.Connector.ERPNext.Tests\\GizmoFort.Connector.ERPNext.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Tests\\GizmoFort.Connector.ERPNext.Tests\\GizmoFort.Connector.ERPNext.Tests.csproj",
+        "projectName": "GizmoFort.Connector.ERPNext.Tests",
+        "projectPath": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Tests\\GizmoFort.Connector.ERPNext.Tests\\GizmoFort.Connector.ERPNext.Tests.csproj",
+        "packagesPath": "C:\\Users\\Jerrill\\.nuget\\packages\\",
+        "outputPath": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Tests\\GizmoFort.Connector.ERPNext.Tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Jerrill\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\GizmoFort.Connector.ERPNext.csproj": {
+                "projectPath": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\GizmoFort.Connector.ERPNext.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.3.1, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "xunit.runner.console": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.4.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

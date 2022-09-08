@@ -8,10 +8,6 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
     {
         public ERPObject Object { get; internal set; }
 
-        internal ERPNextObjectBase()
-        {
-        }
-
         protected ERPNextObjectBase(ERPObject obj)
         {
             this.Object = obj;

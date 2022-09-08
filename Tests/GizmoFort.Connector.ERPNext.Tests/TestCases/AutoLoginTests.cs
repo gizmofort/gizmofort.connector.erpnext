@@ -1,17 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 
 namespace GizmoFort.Connector.ERPNext.Tests.TestCases
 {
-    [TestClass()]
     public class AutoLoginTests
     {
-        [TestMethod()]
+        [Fact()]
         public void Login()
         {
             var client = TestUtils.CreateClient();
 
             var active_username = client.GetActiveUserName();
-            Assert.IsTrue(active_username == TestConstants.TEST_USERNAME);
+            Assert.True(active_username == TestConstants.TEST_USERNAME);
         }
 
 

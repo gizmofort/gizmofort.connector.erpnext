@@ -13,15 +13,17 @@ namespace GizmoFort.Connector.ERPNext.ERPTypes.Warehouse
         {
         }
 
-        public List<ERPWarehouse> GetRootWarehouses()
+        public List<ERPWarehouse>? GetRootWarehouses()
         {
             FetchListOption listOption = new FetchListOption();
             listOption.Filters.Add(new ERPFilter(DocType.Warehouse, "parent_warehouse", OperatorFilter.Equals, ""));
-            List<ERPObject> warehouses_list = client.ListObjects(DocType.Warehouse, listOption);
+            List<ERPObject>? warehouses_list = client.ListObjects(DocType.Warehouse, listOption);
+            if (warehouses_list is null)
+                return null;
             return warehouses_list.Select(x => new ERPWarehouse(x)).ToList();
         }
 
-        protected override ERPWarehouse fromERPObject(ERPObject obj)
+        protected override ERPWarehouse FromERPObject(ERPObject obj)
         {
             return new ERPWarehouse(obj);
         }

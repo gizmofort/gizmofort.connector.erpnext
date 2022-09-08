@@ -1,13 +1,13 @@
 ﻿using System;
 using GizmoFort.Connector.ERPNext.ERPTypes.Item;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace GizmoFort.Connector.ERPNext.Tests.ERPTypes.Item
 {
-    [TestClass()]
+
     public class ItemServiceTests
     {
-        [TestMethod()]
+        [Fact]
         public void ItemServiceTest()
         {
             var service_collection = TestUtils.CreateService();
@@ -19,7 +19,8 @@ namespace GizmoFort.Connector.ERPNext.Tests.ERPTypes.Item
 
             var created_erp_item = item_service.Create(item);
 
-            Assert.IsTrue(created_erp_item.item_code == item_code);
+            Assert.NotNull(created_erp_item);
+            Assert.True(created_erp_item.item_code == item_code);
         }
     }
 }

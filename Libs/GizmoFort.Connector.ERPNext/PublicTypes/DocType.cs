@@ -37,7 +37,7 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
             return String.Equals(Name, other.Name);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is DocType && Equals((DocType)obj);

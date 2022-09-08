@@ -10,7 +10,7 @@ namespace GizmoFort.Connector.ERPNext.ERPTypes.Item
         {
         }
 
-        protected override ERPItem fromERPObject(ERPObject obj)
+        protected override ERPItem FromERPObject(ERPObject obj)
         {
             return new ERPItem(obj);
         }

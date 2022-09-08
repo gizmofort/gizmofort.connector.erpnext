@@ -5,29 +5,31 @@ using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using GizmoFort.Connector.ERPNext.InternalTypes;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Utils;
 using RestSharp;
-using RestSharp.Deserializers;
 using RestRequest = RestSharp.RestRequest;
 
 namespace GizmoFort.Connector.ERPNext.PublicInterfaces
 {
     public class ERPNextClient : IDisposable
     {
-        private string _domain;
-        private string _username;
-        private string _password;
-        private RestClient client;
+        private readonly string _domain;
+        private string? _username;
+        private string? _password;
+        private bool _disposedValue;
+        private readonly RestClient _client;
 
         #region Constructor
 
         public ERPNextClient(string domain)
         {
-            _domain = domain;
-            this.client = new RestClient(domain);
-            this.client.CookieContainer = new CookieContainer();
+            this._domain = domain;
+            this._client = new RestClient(domain);
         }
 
         public ERPNextClient(string domain, string username, string password) : this(domain)
@@ -39,53 +41,80 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
 
         #region Dispose
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+
+                    this._username = null;
+                    this._password = null;
+                    this._client.Dispose();
+
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                _disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~ERPNextClient()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
         public void Dispose()
         {
-            this._domain = this._username = this._password = null;
-            this.client.ClearHandlers();
-            this.client.CookieContainer = null;
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion
 
-        public dynamic RPC(string targetMethod, Method method, dynamic args = null, bool ensureLoggedIn = true)
+        public dynamic? RPC(string targetMethod, Method method, dynamic? args = null, bool ensureLoggedIn = true)
         {
             if (ensureLoggedIn) {
-                loginIfNeeded();
+                LoginIfNeeded();
             }
 
-            IRestRequest request = new RestRequest($"/api/method/{targetMethod}", method);
+            var request = new RestRequest($"/api/method/{targetMethod}", method);
 
-            args = args ?? new { };
+            args ??= new { };
             Type args_type = args.GetType();
             var valid_props = args_type.GetProperties();
 
             foreach (PropertyInfo prop in valid_props) {
                 var val = prop.GetValue(args);
-                request.AddParameter(prop.Name, val);
+                //request.AddParameter(prop.Name, val);
+                RestRequestExtensions.AddParameter(request, prop.Name, val);
             }
 
-            var response = this.client.Execute(request);
-            assertResponseIsOK(response);
+            var response = this._client.Execute(request);
+            AssertResponseIsOK(response);
 
-            return parseDynamic(response);
+            return ParseDynamic(response);
         }
 
         public void Login(string username, string password)
         {
             this._username = username;
             this._password = password;
-            this.client.CookieContainer = new CookieContainer();
 
-            loginIfNeeded();
+            LoginIfNeeded();
         }
 
         public bool IsLoggedIn
         {
             get {
-                CookieCollection collection = this.client.CookieContainer.GetCookies(new Uri(this._domain));
-                Cookie session_cookie = collection["sid"];
-                if (session_cookie != null) {
+                CookieCollection collection = this._client.CookieContainer.GetCookies(new Uri(this._domain));
+                Cookie? session_cookie = collection["sid"];
+                if (session_cookie is not null) {
                     bool is_cookie_active = DateTime.Now < session_cookie.Expires;
                     return is_cookie_active;
                 }
@@ -94,93 +123,100 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
         }
 
 
-        public string GetActiveUserName()
+        public string? GetActiveUserName()
         {
-            dynamic data = RPC("frappe.auth.get_logged_user", Method.GET);
+            dynamic? data = RPC("frappe.auth.get_logged_user", Method.Get);
+            if (data is null)
+                return null;
+
             return data.message;
         }
 
 
-        public ERPObject InsertObject(ERPObject obj)
+        public ERPObject? InsertObject(ERPObject obj)
         {
-            loginIfNeeded();
+            LoginIfNeeded();
 
-            RestRequest request = new RestRequest($"/api/resource/{obj.ObjectType}", Method.POST);
+            var request = new RestRequest($"/api/resource/{obj.ObjectType}", Method.Post);
 
-            var args_text = SerializeUtils.ToString(obj.Data);
-            request.AddParameter("data", args_text);
+            var args_text = JsonSerializer.Serialize(obj.Data);
+            //request.AddParameter("data", args_text);
+            RestRequestExtensions.AddParameter(request, "data", args_text);
 
-            var response = this.client.Execute(request);
 
-            assertResponseIsOK(response);
+            var response = this._client.Execute(request);
 
-            return parseOneObject(obj.ObjectType, response);
+            AssertResponseIsOK(response);
+
+            return ParseOneObject(obj.ObjectType, response);
         }
 
-        public ERPObject GetObject(DocType docType, string name)
+        public ERPObject? GetObject(DocType docType, string name)
         {
-            loginIfNeeded();
+            LoginIfNeeded();
 
-            RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.GET);
+            var request = new RestRequest($"/api/resource/{docType}/{name}", Method.Get);
 
-            var response = this.client.Execute(request);
+            var response = this._client.Execute(request);
 
             if (response.StatusCode == HttpStatusCode.NotFound) {
                 return null;
             }
 
-            assertResponseIsOK(response);
+            AssertResponseIsOK(response);
 
-            return parseOneObject(docType, response);
+            return ParseOneObject(docType, response);
         }
 
-        public ERPObject UpdateObject(ERPObject obj)
+        public ERPObject? UpdateObject(ERPObject obj)
         {
             return UpdateObject(obj.ObjectType, obj.Name, obj);
         }
 
-        public ERPObject UpdateObject(DocType docType, string name, ERPObject obj)
+        public ERPObject? UpdateObject(DocType docType, string name, ERPObject obj)
         {
-            loginIfNeeded();
+            LoginIfNeeded();
 
-            RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.PUT);
-            var args_text = SerializeUtils.ToString(obj.Data);
-            request.AddParameter("data", args_text);
+            var request = new RestRequest($"/api/resource/{docType}/{name}", Method.Put);
+            var args_text = JsonSerializer.Serialize(obj.Data);
+            //request.AddParameter("data", args_text);
+            RestRequestExtensions.AddParameter(request, "data", args_text);
 
-            var response = this.client.Execute(request);
 
-            assertResponseIsOK(response);
+            var response = this._client.Execute(request);
 
-            return parseOneObject(docType, response);
+            AssertResponseIsOK(response);
+
+            return ParseOneObject(docType, response);
         }
 
         public void DeleteObject(DocType docType, string name)
         {
-            loginIfNeeded();
+            LoginIfNeeded();
 
-            RestRequest request = new RestRequest($"/api/resource/{docType}/{name}", Method.DELETE);
+            var request = new RestRequest($"/api/resource/{docType}/{name}", Method.Delete);
 
-            var response = this.client.Execute(request);
+            var response = this._client.Execute(request);
 
-            assertResponseIsOK(response);
+            AssertResponseIsOK(response);
         }
 
-        public List<ERPObject> ListObjects(DocType docType, FetchListOption listOption = null)
+        public List<ERPObject>? ListObjects(DocType docType, FetchListOption? listOption = null)
         {
-            loginIfNeeded();
+            LoginIfNeeded();
 
-            listOption = listOption ?? new FetchListOption();
-            RestRequest request = new RestRequest($"/api/resource/{docType}", Method.GET);
+            listOption ??= new FetchListOption();
+            var request = new RestRequest($"/api/resource/{docType}", Method.Get);
 
             var filters = listOption.Filters ?? new List<ERPFilter>();
             if (filters.Any()) {
-                var filter_val = SerializeUtils.ToString(filters.Select(toFilterObject).ToList());
+                var filter_val = JsonSerializer.Serialize(filters.Select(ToFilterObject).ToList());
                 request.AddParameter("filters", filter_val);
             }
 
             var included_fields = listOption.IncludedFields ?? new List<string>();
             if (included_fields.Any()) {
-                var filter_val = SerializeUtils.ToString(included_fields.ToList());
+                var filter_val = JsonSerializer.Serialize(included_fields.ToList());
                 request.AddParameter("fields", filter_val);
             }
 
@@ -192,58 +228,86 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                 request.AddParameter("limit_start", listOption.PageStartIndex);
             }
 
-            var response = this.client.Execute(request);
-            assertResponseIsOK(response);
+            var response = this._client.Execute(request);
+            AssertResponseIsOK(response);
 
-            return parseManyObjects(docType, response);
+            return ParseManyObjects(docType, response);
         }
 
         #region Helper Methods
 
-        private static ExpandoObject parseDynamic(IRestResponse response)
+        private static ExpandoObject? ParseDynamic(RestResponse response)
         {
-            JsonDeserializer des = new JsonDeserializer();
-            Dictionary<string, object> result = des.Deserialize<Dictionary<string, object>>(response);
+            var content = response.Content;
+            if (string.IsNullOrEmpty(content))
+                return null;
 
-            return convertToData(result);
+            Dictionary<string, object?>? result = JsonSerializer.Deserialize<Dictionary<string, object?>>(content);
+            if (result is null)
+                return null;
+
+            return ConvertToData(result);
         }
 
-        private static ERPObject parseOneObject(DocType docType, IRestResponse response)
+        private static ERPObject? ParseOneObject(DocType docType, RestResponse response)
         {
-            JsonDeserializer des = new JsonDeserializer();
-            DocRaw data_json = des.Deserialize<DocRaw>(response);
-            return new ERPObject(docType, convertToData(data_json.data));
+            var content = response.Content;
+            if (string.IsNullOrEmpty(content))
+                return null;
+
+            DocRaw? data_json = JsonSerializer.Deserialize<DocRaw>(content);
+            if (data_json is null)
+                return null;
+            if (data_json.data is null)
+                return null;
+
+            return new ERPObject(docType, ConvertToData(data_json.data));
         }
 
-        private static List<ERPObject> parseManyObjects(DocType docType, IRestResponse response)
+        private static List<ERPObject>? ParseManyObjects(DocType docType, RestResponse response)
         {
-            JsonDeserializer des = new JsonDeserializer();
-            DocRawList data_json = des.Deserialize<DocRawList>(response);
+            var content = response.Content;
+            if (string.IsNullOrEmpty(content))
+                return null;
 
-            return data_json.data.Select(x => new ERPObject(docType, convertToData(x))).ToList();
+            DocRawList? data_json = JsonSerializer.Deserialize<DocRawList>(content);
+            if (data_json is null)
+                return null;
+            if (data_json.data is null)
+                return null;
+
+            return data_json.data.Select(x => new ERPObject(docType, ConvertToData(x))).ToList();
         }
 
-        private static List<string> toFilterObject(ERPFilter filter)
+        private static List<string> ToFilterObject(ERPFilter filter)
         {
-            List<string> result = new List<string>();
-            result.Add(filter.DocType.ToString());
-            result.Add(filter.TargetField);
-            result.Add(OperatorFilterUtils.ToString(filter.OperatorFilter));
-            result.Add(filter.Operand);
+            var result = new List<string>
+            {
+                filter.DocType.ToString(),
+                filter.TargetField,
+                OperatorFilterUtils.ToString(filter.OperatorFilter),
+                filter.Operand
+            };
             return result;
         }
 
-        private static ExpandoObject convertToData(IDictionary<string, object> vals)
+        private static ExpandoObject ConvertToData(IDictionary<string, object?> vals)
         {
-            ExpandoObject result = new ExpandoObject();
+            var result = new ExpandoObject();
 
-            var iface = (IDictionary<string, object>) result;
+            var iface = (IDictionary<string, object?>) result;
 
             foreach (var pair in vals)
             {
-                object value = pair.Value;
-                if (value is IDictionary<string, object>) {
-                    value = convertToData((IDictionary<string, object>)value);
+                object? value;
+                if (pair.Value is JsonElement)
+                    value = JsonElementValue((JsonElement)pair.Value);
+                else
+                    value = pair.Value;
+                    
+                if (value is IDictionary<string, object?>)
+                {
+                    value = ConvertToData((IDictionary<string, object?>)value);
                 }
 
                 iface[pair.Key] = value;
@@ -252,27 +316,76 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
             return result;
         }
 
+        //
+        // reference: https://stackoverflow.com/a/58679930/2758185
+        //
+        public static object? JsonElementValue(JsonElement element)
+        {
+            object? result;
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Null:
+                    result = null;
+                    break;
+                case JsonValueKind.Number:
+                    String? srcDataString = element.GetRawText();
+                    if (srcDataString is null)
+                        result = null;
+                    else if (double.TryParse(srcDataString, out _))
+                        result = element.GetDouble();
+                    else if (int.TryParse(srcDataString, out _))
+                        result = element.GetInt32();
+                    else
+                        result = null;
+                    break;
+                case JsonValueKind.False:
+                    result = false;
+                    break;
+                case JsonValueKind.True:
+                    result = true;
+                    break;
+                case JsonValueKind.Undefined:
+                    result = null;
+                    break;
+                case JsonValueKind.String:
+                    result = element.GetString();
+                    break;
+                case JsonValueKind.Object:
+                    result = element; //TODO
+                    break;
+                case JsonValueKind.Array:
+                    result = element.EnumerateArray()
+                        .Select(o => JsonElementValue(o))
+                        .ToArray();
+                    break;
+                default:
+                    result = null;
+                    break;
+            }
+            return result;
+        }
+
         #region Login specific
 
-        private void loginIfNeeded()
+        private void LoginIfNeeded()
         {
             if (!IsLoggedIn)
             {
-                doLogin();
+                DoLogin();
             }
         }
 
-        private void doLogin()
+        private void DoLogin()
         {
             if (string.IsNullOrEmpty(_username)) return;
             if (string.IsNullOrEmpty(_password)) return;
 
-            var data = RPC("login", Method.POST, new { usr = _username, pwd = _password }, false);
+            RPC("login", Method.Post, new { usr = _username, pwd = _password }, false);
         }
 
         #endregion
 
-        private static void assertResponseIsOK(IRestResponse response)
+        private static void AssertResponseIsOK(RestResponse response)
         {
             switch (response.StatusCode)
             {
@@ -280,7 +393,7 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                 case HttpStatusCode.Accepted:
                     break;
                 default:
-                    throw new ERPException($"ErrorCode: {response.StatusCode.ToString()}\r\n\r\nDescription:\r\n{response.StatusDescription}\r\n\r\nReason:\r\n" + response.Content + "\r\n");
+                    throw new ERPException($"ErrorCode: {response.StatusCode}\r\n\r\nDescription:\r\n{response.StatusDescription}\r\n\r\nReason:\r\n" + response.Content + "\r\n");
             }
         }
 

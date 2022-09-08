@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "FQnb9Igmx0ROhn5cAhmRDaN45fI6/lvcpT/3hoPp4669olgX2xXcMAvOmeZNksBdj9p2UOyclGp9z540P4HMvQ==",
+  "success": true,
+  "projectFilePath": "C:\\AzureDevOps\\LexGetDigital\\github-forks\\gizmofort.connector.erpnext\\Libs\\GizmoFort.Connector.ERPNext\\GizmoFort.Connector.ERPNext.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Jerrill\\.nuget\\packages\\restsharp\\108.0.1\\restsharp.108.0.1.nupkg.sha512",
+    "C:\\Users\\Jerrill\\.nuget\\packages\\system.data.datasetextensions\\4.5.0\\system.data.datasetextensions.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}

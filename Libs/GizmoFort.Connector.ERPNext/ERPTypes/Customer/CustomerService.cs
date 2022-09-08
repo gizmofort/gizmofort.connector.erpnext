@@ -9,7 +9,7 @@ namespace GizmoFort.Connector.ERPNext.ERPTypes.Customer
         public CustomerService(ERPNextClient client) 
             : base(DocType.Customer, client) { }
 
-        protected override ERPCustomer fromERPObject(ERPObject obj)
+        protected override ERPCustomer FromERPObject(ERPObject obj)
         {
             return new ERPCustomer(obj);
         }

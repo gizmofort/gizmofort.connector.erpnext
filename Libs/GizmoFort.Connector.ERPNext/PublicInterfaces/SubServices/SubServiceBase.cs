@@ -17,31 +17,39 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices
             this.client = client;
         }
 
-        public T Create(T obj)
+        public T? Create(T obj)
         {
-            ERPObject result = this.client.InsertObject(obj.Object);
-            return fromERPObject(result);
+            ERPObject? result = this.client.InsertObject(obj.Object);
+            if (result is null)
+                return null;
+
+            return FromERPObject(result);
         }
 
-        public T Get(string name)
+        public T? Get(string name)
         {
-            ERPObject erp_object = this.client.GetObject(ObjectType, name);
+            ERPObject? erp_object = this.client.GetObject(ObjectType, name);
             if (erp_object == null) return null;
-            return fromERPObject(erp_object);
+            return FromERPObject(erp_object);
         }
 
-        public List<string> ListNames(List<ERPFilter> filters = null, int pageSize = 0, int pageStartIndex = 0)
+        public List<string>? ListNames(List<ERPFilter>? filters = null, int pageSize = 0, int pageStartIndex = 0)
         {
             FetchListOption listOption = new FetchListOption();
-            listOption.Filters = filters;
-            listOption.PageSize = 0;
-            listOption.PageStartIndex = 0;
+            if (filters is null)
+                listOption.ClearFilters();
+            else
+                listOption.SetFilters(filters);
+            listOption.SetPagination(pageSize, pageStartIndex);
 
-            List<ERPObject> object_list = this.client.ListObjects(ObjectType, listOption);
+            List<ERPObject>? object_list = this.client.ListObjects(ObjectType, listOption);
+            if (object_list is null) 
+                return null;
+
             return object_list.Select(x => x.Name).ToList();
         }
 
-        public List<ERPObject> ListObjects(FetchListOption listOption)
+        public List<ERPObject>? ListObjects(FetchListOption listOption)
         {
             return this.client.ListObjects(ObjectType, listOption);
         }
@@ -56,6 +64,6 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices
             this.client.DeleteObject(ObjectType, name);
         }
 
-        protected abstract T fromERPObject(ERPObject obj);
+        protected abstract T FromERPObject(ERPObject obj);
     }
 }
