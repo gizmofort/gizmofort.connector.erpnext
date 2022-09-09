@@ -13,3 +13,4 @@
 /Libs/GizmoFort.Connector.ERPNext/*.nupkg
 /Tests/GizmoFort.Connector.ERPNext.Tests/*.user
 /Libs/GizmoFort.Connector.ERPNext/*.user
+/Tools/GenerateCodeFromSchemaJson/obj
