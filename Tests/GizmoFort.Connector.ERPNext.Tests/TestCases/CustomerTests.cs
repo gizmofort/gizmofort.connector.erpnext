@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using GizmoFort.Connector.ERPNext.ERPTypes.Customer;
+using GizmoFort.Connector.ERPNext.ERPTypes.Selling.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
 using Xunit;
@@ -17,12 +17,14 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
             string test_customer_name = Guid.NewGuid().ToString();
             string test_customer_website = Guid.NewGuid().ToString();
 
-            ERPCustomer initial_data = new ERPCustomer();
-            initial_data.customer_type = CustomerType.Individual;
-            initial_data.customer_name = test_customer_name;
-            initial_data.customer_group = "Individual";
-            initial_data.website = test_customer_website;
-            initial_data.territory = "Australia";
+            var initial_data = new ERP_Selling_Customer
+            {
+                CustomerType2 = ERP_Selling_Customer.CustomerTypeEnum.Individual,
+                CustomerName = test_customer_name,
+                CustomerGroup = "Individual",
+                Website = test_customer_website,
+                Territory = "Australia"
+            };
 
             #region Test - Insert
 
@@ -32,10 +34,10 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
 
             #region Test - List
 
-            FetchListOption listOption = new FetchListOption();
-            listOption.Filters.Add(new ERPFilter(DocType.Customer, "name", OperatorFilter.Equals, test_customer_name));
+            var listOption = new FetchListOption();
+            listOption.Filters.Add(new ERPFilter(DocType.Selling_Customer, "name", OperatorFilter.Equals, test_customer_name));
             listOption.IncludedFields.AddRange(new string[] {"name", "website"});
-            var documents = client.ListObjects(DocType.Customer, listOption);
+            var documents = client.ListObjects(DocType.Selling_Customer, listOption);
 
             Assert.NotNull(documents);
             Assert.True(documents.Count == 1, "Customer result is not one");
@@ -46,7 +48,7 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
 
             #region Test - Get
 
-            var full_customer_object = client.GetObject(DocType.Customer, test_customer_name);
+            var full_customer_object = client.GetObject(DocType.Selling_Customer, test_customer_name);
 
             Assert.NotNull(full_customer_object);
             Assert.True(full_customer_object.Data.name == test_customer_name, "Customer name is invalid");
@@ -56,40 +58,47 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
 
             #region Test - Wrapper
 
-            ERPCustomer customer = new ERPCustomer(full_customer_object);
-            Assert.True(customer.customer_name == test_customer_name, "Customer name is invalid");
-            Assert.True(customer.website == test_customer_website, "Customer website is invalid");
+            var customer = new ERP_Selling_Customer(full_customer_object);
+            Assert.True(customer.CustomerName == test_customer_name, "Customer name is invalid");
+            Assert.True(customer.Website == test_customer_website, "Customer website is invalid");
             //Assert.True(customer.status == CustomerStatus.Active, "Customer website is invalid");
 
             #endregion
 
             #region Test - Update
 
-            ERPObject updated_obj = new ERPObject(DocType.Customer);
+            var updated_obj = new ERPObject(DocType.Selling_Customer);
             updated_obj.Data.website = Guid.NewGuid().ToString();
 
             // update first
-            client.UpdateObject(DocType.Customer, test_customer_name, updated_obj);
+            client.UpdateObject(DocType.Selling_Customer, test_customer_name, updated_obj);
 
             // get a new instance - after update
-            var remote_updated_customer = client.GetObject(DocType.Customer, test_customer_name);
+            var remote_updated_customer = client.GetObject(DocType.Selling_Customer, test_customer_name);
 
             // test
             Assert.NotNull(remote_updated_customer);
             Assert.True(remote_updated_customer.Data.website == updated_obj.Data.website, "Customer website is invalid - after update");
-            Assert.True(remote_updated_customer.Data.territory == initial_data.territory, "Customer territory is invalid - after update");
+            Assert.True(remote_updated_customer.Data.territory == initial_data.Territory, "Customer territory is invalid - after update");
 
             #endregion
 
 
             #region Test - Delete
 
-            client.DeleteObject(DocType.Customer, test_customer_name);
+            client.DeleteObject(DocType.Selling_Customer, test_customer_name);
 
-            FetchListOption option = new FetchListOption();
-            option.Filters.Add(new ERPFilter(DocType.Customer, nameof(ERPCustomer.customer_name), OperatorFilter.Equals,
-                test_customer_name));
-            var after_delete_result = client.ListObjects(DocType.Customer, option);
+            var option = new FetchListOption();
+            //option.Filters.Add(new ERPFilter(DocType.Selling_Customer,
+            //                                 nameof(ERP_Selling_Customer.CustomerName), //does not work... return CustomerName instead of customer_name
+            //                                 OperatorFilter.Equals,
+            //                                 test_customer_name)) ;
+            option.Filters.Add(new ERPFilter(DocType.Selling_Customer,
+                                             ERP_Selling_Customer.GetColumnName(nameof(ERP_Selling_Customer.CustomerName))!,
+                                             OperatorFilter.Equals,
+                                             test_customer_name));
+
+            var after_delete_result = client.ListObjects(DocType.Selling_Customer, option);
             
             Assert.NotNull(after_delete_result);
             Assert.True(after_delete_result.Count == 0, "Failed to delete customer");

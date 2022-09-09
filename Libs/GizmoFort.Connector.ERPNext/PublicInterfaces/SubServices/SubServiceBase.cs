@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using GizmoFort.Connector.ERPNext.ERPTypes.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
 
