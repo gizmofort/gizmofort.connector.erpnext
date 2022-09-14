@@ -1,13 +1,8 @@
 ﻿using Xunit;
-using GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Tests;
-using GizmoFort.Connector.ERPNext.WrapperTypes;
 using GizmoFort.Connector.ERPNext.ERPTypes.Selling.Customer;
 
 namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices.Tests

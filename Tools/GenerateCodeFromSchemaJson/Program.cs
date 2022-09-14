@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Text;
 using System.Reflection;
 using System.Text.Json;
-using static MyApp.Program;
 
 namespace MyApp // Note: actual namespace depends on the project name.
 {
@@ -194,13 +193,11 @@ namespace " + @namespace + @"
 @"" + banner + @"
 
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
 using GizmoFort.Connector.ERPNext.DataAnnotations;
 using GizmoFort.Connector.ERPNext.Serialization;
 using _DocType = GizmoFort.Connector.ERPNext.PublicTypes.DocType;
-using System.Text.Json;
 
 namespace " + @namespace + @"
 {
@@ -208,16 +205,6 @@ namespace " + @namespace + @"
     {
         public " + modelClassName + @"() : this(new ERPObject(_DocType." + doctypeEnumValue + @")) { }
         public " + modelClassName + @"(ERPObject obj) : base(obj) { }
-
-        //public static string? GetColumnName(string propertyName)
-        //{
-        //    return ERPNextObjectBase.GetColumnName<" + modelClassName + @">(propertyName);
-        //}
-
-        //public static string? GetPropertyName(string columnName)
-        //{
-        //    return ERPNextObjectBase.GetPropertyName<" + modelClassName + @">(columnName);
-        //}
 " + properties + @"
 
     }

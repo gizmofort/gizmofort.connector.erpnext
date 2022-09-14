@@ -1,21 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GizmoFort.Connector.ERPNext.DataAnnotations
 {

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using GizmoFort.Connector.ERPNext.ERPTypes.Selling.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.Serialization;
-using GizmoFort.Connector.ERPNext.WrapperTypes;
 using Xunit;
 
 namespace GizmoFort.Connector.ERPNext.Tests.TestCases
