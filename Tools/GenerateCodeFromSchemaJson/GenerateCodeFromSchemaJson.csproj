@@ -18,10 +18,12 @@
 
 	<ItemGroup>
 		<None Remove="schema_14.0.3.json" />
+		<None Remove="unit_test_schema.json" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Include="schema_14.0.3.json" />
+		<EmbeddedResource Include="unit_test_schema.json" />
 	</ItemGroup>
 
 </Project>

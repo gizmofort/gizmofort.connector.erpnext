@@ -24,7 +24,7 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices.Tests
             string test_name = Guid.NewGuid().ToString();
             string test_customer_website = Guid.NewGuid().ToString();
 
-            ERP_Selling_Customer initial_data = ERP_Selling_Customer.CreateNew(test_name, ERP_Selling_Customer.CustomerTypeEnum.Individual, "Individual", "Australia");
+            ERP_Selling_Customer initial_data = ERP_Selling_Customer.CreateNew(test_name, ERP_Selling_Customer.CustomerTypeEnum.Individual, "Individual", "United States");
             initial_data.Website = test_customer_website;
 
             #region Test - Insert
@@ -64,6 +64,21 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices.Tests
                 Name = test_name,
                 Website = Guid.NewGuid().ToString()
             };
+
+            //
+            //
+            //
+            updated_customer = erp_customer;
+            string date = updated_customer.Object.Data.creation;
+            string date2 = date.Replace(" ", "T") + "+00:00";
+            DateTimeOffset date3 = DateTimeOffset.Parse(date2);
+            updated_customer.Creation = date3;
+            updated_customer.Modified = date3;
+            updated_customer.Website = Guid.NewGuid().ToString();
+            string date4 = updated_customer.Object.Data.creation;
+            //
+            //
+            //
 
             // update first
             customer_service.Update(updated_customer);

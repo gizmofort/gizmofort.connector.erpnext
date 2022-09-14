@@ -35,6 +35,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
                 projectDirectory = projectDirectory.Parent;
             }
             var outputFolder = Path.Combine(projectDirectory.FullName, @"Libs\GizmoFort.Connector.ERPNext\ERPTypes");
+            var unitTestOutputFolder = Path.Combine(projectDirectory.FullName, @"Tests\GizmoFort.Connector.ERPNext.Tests\TestData");
             Console.WriteLine($"Exporting generated code to {outputFolder}...");
             if (!Directory.Exists(outputFolder))
                 Directory.CreateDirectory(outputFolder);
@@ -97,11 +98,10 @@ namespace MyApp // Note: actual namespace depends on the project name.
                     // user-customizable model file
                     //
                     {
-                        var nameColumnType = columnInfos
+                        var columnInfo = columnInfos
                                                 .Where(c => c.column_name == "name")
-                                                .Select(c => c.data_type)
                                                 .First();
-                        var nameCSharpType = GetCSharpTypeFromDataType(nameColumnType, isNullable: false);
+                        var nameCSharpType = GetCSharpTypeFromColumnInfo(columnInfo);
 
                         var fileContents =
 @"" + banner + @"
@@ -150,7 +150,8 @@ namespace " + @namespace + @"
                         foreach (var columnInfo in columnInfos)
                         {
                             var isNullable = columnInfo.is_nullable == "YES";
-                            var cSharpType = GetCSharpTypeFromDataType(columnInfo.data_type, isNullable);
+                            var columnType = columnInfo.column_type;
+                            var cSharpType = GetCSharpTypeFromColumnInfo(columnInfo);
                             var columnName = columnInfo.column_name;
                             var hasLeadingUnderscore = columnName[..1] == "_";
                             var optionalUnderscore = hasLeadingUnderscore ? "_" : string.Empty;
@@ -158,16 +159,33 @@ namespace " + @namespace + @"
                             var propertyName = $"{optionalUnderscore}{columnNamePascalCase}";
                             var safeColumnName = KeywordFixup(columnName, "@");
                             propertiesBuilder.AppendLine();
-                            propertiesBuilder.AppendLine($"        [Column(\"{safeColumnName}\")]");
-                            if (hasLeadingUnderscore)
-                                propertiesBuilder.AppendLine("#pragma warning disable IDE1006 // Naming Styles");
-                            propertiesBuilder.AppendLine($"        public {cSharpType} {propertyName}");
-                            if (hasLeadingUnderscore)
-                                propertiesBuilder.AppendLine("#pragma warning restore IDE1006 // Naming Styles");
-                            propertiesBuilder.AppendLine($"        {{");
-                            propertiesBuilder.AppendLine($"            get {{ return data.{safeColumnName}; }}");
-                            propertiesBuilder.AppendLine($"            set {{ data.{safeColumnName} = value; }}");
-                            propertiesBuilder.AppendLine($"        }}");
+                            propertiesBuilder.AppendLine($"        [ColumnInfo(\"{safeColumnName}\", \"{columnType}\", isNullable: {isNullable.ToString().ToLower()})]");
+
+                            switch (columnName)
+                            {
+                                case "docstatus":
+                                    propertiesBuilder.AppendLine($"        public Docstatus {propertyName}");
+                                    propertiesBuilder.AppendLine($"        {{");
+                                    propertiesBuilder.AppendLine($"            get {{ return (Docstatus)data.{safeColumnName}; }}");
+                                    propertiesBuilder.AppendLine($"            set {{ data.{safeColumnName} = (int)value; }}");
+                                    propertiesBuilder.AppendLine($"        }}");
+                                    break;
+
+                                default:
+                                    if (hasLeadingUnderscore)
+                                        propertiesBuilder.AppendLine("#pragma warning disable IDE1006 // Naming Styles");
+                                    propertiesBuilder.AppendLine($"        public {cSharpType} {propertyName}");
+                                    if (hasLeadingUnderscore)
+                                        propertiesBuilder.AppendLine("#pragma warning restore IDE1006 // Naming Styles");
+                                    propertiesBuilder.AppendLine($"        {{");
+                                    var getterFunction = GetGetterFuncFromColumnInfo(columnInfo).Replace("*", $"data.{safeColumnName}");
+                                    propertiesBuilder.AppendLine($"            get {{ return {getterFunction}; }}");
+                                    var setterFunction = GetSetterFuncFromColumnInfo(columnInfo).Replace("*", "value");
+                                    propertiesBuilder.AppendLine($"            set {{ data.{safeColumnName} = {setterFunction}; }}");
+                                    propertiesBuilder.AppendLine($"        }}");
+                                    break;
+                            }
+
                         }
                         var properties = propertiesBuilder.ToString();
 
@@ -179,19 +197,27 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using GizmoFort.Connector.ERPNext.PublicTypes;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
-using _DockType = GizmoFort.Connector.ERPNext.PublicTypes.DocType;
+using GizmoFort.Connector.ERPNext.DataAnnotations;
+using GizmoFort.Connector.ERPNext.Serialization;
+using _DocType = GizmoFort.Connector.ERPNext.PublicTypes.DocType;
+using System.Text.Json;
 
 namespace " + @namespace + @"
 {
     public partial class " + modelClassName + @" : ERPNextObjectBase
     {
-        public " + modelClassName + @"() : this(new ERPObject(_DockType." + doctypeEnumValue + @")) { }
+        public " + modelClassName + @"() : this(new ERPObject(_DocType." + doctypeEnumValue + @")) { }
         public " + modelClassName + @"(ERPObject obj) : base(obj) { }
 
-        public static string? GetColumnName(string propertyName)
-        {
-            return ERPNextObjectBase.GetColumnName<" + modelClassName + @">(propertyName);
-        }
+        //public static string? GetColumnName(string propertyName)
+        //{
+        //    return ERPNextObjectBase.GetColumnName<" + modelClassName + @">(propertyName);
+        //}
+
+        //public static string? GetPropertyName(string columnName)
+        //{
+        //    return ERPNextObjectBase.GetPropertyName<" + modelClassName + @">(columnName);
+        //}
 " + properties + @"
 
     }
@@ -221,13 +247,13 @@ namespace " + @namespace + @"
 using GizmoFort.Connector.ERPNext.PublicInterfaces;
 using GizmoFort.Connector.ERPNext.PublicInterfaces.SubServices;
 using GizmoFort.Connector.ERPNext.PublicTypes;
-using _DockType = GizmoFort.Connector.ERPNext.PublicTypes.DocType;
+using _DocType = GizmoFort.Connector.ERPNext.PublicTypes.DocType;
 
 namespace " + @namespace + @"
 {
     public class " + serviceClassName + @" : SubServiceBase<" + modelClassName + @">
     {
-        public " + serviceClassName + @"(ERPNextClient client) : base(_DockType." + doctypeEnumValue + @", client) { }
+        public " + serviceClassName + @"(ERPNextClient client) : base(_DocType." + doctypeEnumValue + @", client) { }
 
         protected override " + modelClassName + @" FromERPObject(ERPObject obj)
         {
@@ -265,6 +291,7 @@ namespace " + @namespace + @"
                     //
                     // services lines
                     //
+                    if (serviceClassName != "UnitTestingOnly_TestType_Service")
                     {
                         servicesUsings.AppendLine($"using {@namespace};");
                         servicesProperties.AppendLine($"        public {serviceClassName} {serviceClassName} {{ get; }}");
@@ -306,8 +333,8 @@ namespace " + @namespace + @"
             }
 
             //
-            // replace doctypes in:
-            // gizmofort.connector.erpnext\Libs\GizmoFort.Connector.ERPNext\PublicTypes\DocType.cs
+            // replace main servies file in:
+            // GizmoFort.Connector.ERPNext\PublicInterfaces\ERPNextServices.cs
             //
             {
                 Console.WriteLine(@"Replace main servies file at GizmoFort.Connector.ERPNext\PublicInterfaces\ERPNextServices.cs...");
@@ -345,6 +372,38 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                 using var file = new StreamWriter(servicesFileFullPath);
                 file.WriteLine(sb.ToString()); // "sb" is the StringBuilder
             }
+
+            //
+            // move unit test data to correct location
+            //
+            {
+                var sourceFolder = Path.Combine(outputFolder, "UnitTestingOnly");
+                var destFolder = Path.Combine(unitTestOutputFolder, "UnitTestingOnly");
+
+                if (Directory.Exists(destFolder))
+                    Directory.Delete(destFolder, recursive: true);
+
+                Directory.Move(sourceFolder,destFolder);
+
+                //
+                // only need the partial
+                //
+                var testTypeFolder = Path.Combine(destFolder, "TestType");
+                foreach (var filePath in Directory.GetFiles(testTypeFolder))
+                {
+                    var fileInfo = new FileInfo(filePath);
+                    if (fileInfo.Name.EndsWith(".partial.cs"))
+                    {
+                        var fileDestPath = Path.Combine(unitTestOutputFolder, fileInfo.Name);
+                        if (File.Exists(fileDestPath))
+                            File.Delete(fileDestPath);
+                        File.Move(filePath, fileDestPath);
+                    }
+                }
+                Directory.Delete(destFolder, recursive: true);
+
+            }
+
 
             Console.WriteLine("Done!");
 
@@ -484,37 +543,20 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
             };
         }
 
-        //static string GetCSharpTypeDefaultAssignment(string cSharpType)
-        //{
-        //    return cSharpType switch
-        //    {
-        //        "int" => string.Empty,
-        //        "decimal" => string.Empty,
-        //        "string" => " = default!;",
-        //        "DateTime" => string.Empty,
-        //        "TimeSpan" => string.Empty,
-        //        "DateOnly" => string.Empty,
-        //        "long" => string.Empty,
-        //        "int?" => " = default;",
-        //        "decimal?" => " = default;",
-        //        "string?" => " = default;",
-        //        "DateTime?" => " = default;",
-        //        "TimeSpan?" => " = default;",
-        //        "DateOnly?" => " = default;",
-        //        "long?" => " = default;",
-        //        _ => string.Empty
-        //    };
-        //}
-
-        static string GetCSharpTypeFromDataType(string dataType, bool isNullable)
+        static string GetCSharpTypeFromColumnInfo(ColumnInfo columnInfo)
         {
-            return dataType switch
+            var isNullable = columnInfo.column_name != "name" && columnInfo.is_nullable == "YES";
+
+            if (columnInfo.column_type == "int(1)")
+                return "bool" + (isNullable ? "?" : string.Empty);
+
+            return columnInfo.data_type switch
             {
                 "int" => "int",
                 "decimal" => "decimal",
                 "text" => "string",
                 "varchar" => "string",
-                "datetime" => "DateTime",
+                "datetime" => "DateTimeOffset",
                 "time" => "TimeSpan",
                 "date" => "DateOnly",
                 "bigint" => "long",
@@ -522,16 +564,80 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                 _ => "object",
             } + (isNullable ? "?" : string.Empty);
         }
+        static string GetGetterFuncFromColumnInfo(ColumnInfo columnInfo)
+        {
+            var isNullable = columnInfo.column_name != "name" && columnInfo.is_nullable == "YES";
+
+            if (columnInfo.column_type == "int(1)")
+                return (isNullable ? "ERPNextConverter.NullableIntToBool((int)*)" : "ERPNextConverter.IntToBool((int)*)");
+
+            return columnInfo.data_type switch
+            {
+                "int" => "*",
+                "decimal" => "*",
+                "text" => "*",
+                "varchar" => "*",
+                "datetime" => "ERPNextConverter.StringToDateTimeOffset(*)",
+                "time" => "ERPNextConverter.StringToTimeSpan(*)",
+                "date" => "ERPNextConverter.StringToDateOnly(*)",
+                "bigint" => "*",
+                "longtext" => "*",
+                _ => "*",
+            };
+        }
+
+        static string GetSetterFuncFromColumnInfo(ColumnInfo columnInfo)
+        {
+            var isNullable = columnInfo.column_name != "name" && columnInfo.is_nullable == "YES";
+
+            if (columnInfo.column_type == "int(1)")
+                return (isNullable ? "ERPNextConverter.NullableBoolToInt(*)" : "ERPNextConverter.BoolToInt(*)");
+
+            var nullForgivenessOperator = (isNullable ? "!" : string.Empty);
+
+            var fracSecs = columnInfo.FractionalSecondsDigits != -1 ? $", {columnInfo.FractionalSecondsDigits}" : String.Empty;
+            var stringCvt = columnInfo.StringLength != -1 ? $"ERPNextConverter.TruncateString(*, {columnInfo.StringLength})" : "*";
+
+            return columnInfo.data_type switch
+            {
+                "int" => "*",
+                "decimal" => "*",
+                "text" => $"{stringCvt}",
+                "varchar" => $"{stringCvt}",
+                "datetime" => $"ERPNextConverter.DateTimeOffsetToString(*{fracSecs})",
+                "time" => $"ERPNextConverter.TimeSpanToString(*{fracSecs})",
+                "date" => $"ERPNextConverter.DateOnlyToString(*{fracSecs})",
+                "bigint" => "*",
+                "longtext" => $"{stringCvt}",
+                _ => "*",
+            };
+        }
 
         static IList<ColumnInfo> GetColumnInfo()
         {
+            var columnInfos = new List<ColumnInfo>();
+
             var assembly = Assembly.GetExecutingAssembly();
+
             var resourceName = "GenerateCodeFromSchemaJson.schema_14.0.3.json";
-            using var stream = assembly.GetManifestResourceStream(resourceName);
-            using var reader = new StreamReader(stream!);
-            var schemaJson = reader.ReadToEnd();
-            var columnInfo = JsonSerializer.Deserialize<AllColumnInfos>(schemaJson);
-            return columnInfo!.schema;
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using var reader = new StreamReader(stream!);
+                var schemaJson = reader.ReadToEnd();
+                var columnInfo = JsonSerializer.Deserialize<AllColumnInfos>(schemaJson);
+                columnInfos.AddRange(columnInfo!.schema);
+            }
+
+            resourceName = "GenerateCodeFromSchemaJson.unit_test_schema.json";
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using var reader = new StreamReader(stream!);
+                var schemaJson = reader.ReadToEnd();
+                var columnInfo = JsonSerializer.Deserialize<AllColumnInfos>(schemaJson);
+                columnInfos.AddRange(columnInfo!.schema);
+            }
+
+            return columnInfos;
         }
 
         public class AllColumnInfos
@@ -552,6 +658,74 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
             public string module { get; set; } = null!;
             public string doctype { get; set; } = null!;
 #pragma warning restore IDE1006 // Naming Styles
+
+            private int _intDisplayWidth = -1;
+            /// <summary>
+            /// NOTE: This value is relevant to the client only (i.e. for use with display padding). Integers of any width can be transmitted to the database.
+            /// </summary>
+            public int IntDisplayWidth { get { GetTypeParameters(); return _intDisplayWidth; } }
+
+            private int _decimalPrecision = -1;
+            public int DecimalPrecision { get { GetTypeParameters(); return _decimalPrecision; } }
+
+            private int _decimalScale = -1;
+            public int DecimalScale { get { GetTypeParameters(); return _decimalScale; } }
+
+            private int _stringLength = -1;
+            public int StringLength { get { GetTypeParameters(); return _stringLength; } }
+
+            private int _fractionalSecondsDigits = -1;
+            public int FractionalSecondsDigits { get { GetTypeParameters(); return _fractionalSecondsDigits; } }
+
+            private bool _analyzed = false;
+
+            private void GetTypeParameters()
+            {
+                if (!_analyzed)
+                {
+                    var pattern = "([a-zA-Z]+)(?:\\((\\d+)(?:\\,*(\\d+))*\\))";
+                    var match = Regex.Match(column_type, pattern);
+
+                    string parsed_data_type = match.Groups[1].Value.ToLower();
+                    int? parameter1 = string.IsNullOrEmpty(match.Groups[2].Value) ? null : int.Parse(match.Groups[2].Value);
+                    int? parameter2 = string.IsNullOrEmpty(match.Groups[3].Value) ? null : int.Parse(match.Groups[3].Value);
+
+                    if (parsed_data_type == data_type.ToLower())
+                    {
+                        switch (parsed_data_type)
+                        {
+                            case "int":
+                            case "bigint":
+                                if (parameter1.HasValue) _intDisplayWidth = parameter1.Value;
+                                break;
+
+                            case "decimal":
+                                if (parameter1.HasValue) _decimalPrecision = parameter1.Value;
+                                if (parameter2.HasValue) _decimalScale = parameter2.Value;
+                                break;
+
+                            case "longtext":
+                            case "text":
+                            case "varchar":
+                            case "nvarchar":
+                                if (parameter1.HasValue) _stringLength = parameter1.Value;
+                                break;
+
+                            case "datetime":
+                            case "time":
+                                if (parameter1.HasValue) _fractionalSecondsDigits = parameter1.Value;
+                                break;
+
+                            case "date":
+                                break;
+
+                        }
+                    }
+
+                    _analyzed = true;
+                }
+            }
+
         }
 
     }

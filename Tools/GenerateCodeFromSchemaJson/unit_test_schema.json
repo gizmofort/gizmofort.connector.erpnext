@@ -1,0 +1,166 @@
+{
+  "schema": [
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "name",
+      "is_nullable": "NO",
+      "data_type": "varchar",
+      "column_type": "varchar(140)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "flag",
+      "is_nullable": "NO",
+      "data_type": "int",
+      "column_type": "int(1)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "int_width_eight",
+      "is_nullable": "NO",
+      "data_type": "int",
+      "column_type": "int(8)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "int_width_eleven",
+      "is_nullable": "NO",
+      "data_type": "int",
+      "column_type": "int(11)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_int_width_eleven",
+      "is_nullable": "YES",
+      "data_type": "int",
+      "column_type": "int(11)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "bigint_width_20",
+      "is_nullable": "NO",
+      "data_type": "bigint",
+      "column_type": "bigint(20)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_date",
+      "is_nullable": "YES",
+      "data_type": "date",
+      "column_type": "date",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_datetime_width_six",
+      "is_nullable": "YES",
+      "data_type": "datetime",
+      "column_type": "datetime(6)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_time_width_six",
+      "is_nullable": "YES",
+      "data_type": "time",
+      "column_type": "time(6)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "decimal_twentyone_by_nine",
+      "is_nullable": "NO",
+      "data_type": "decimal",
+      "column_type": "decimal(21,9)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_decimal_twentyone_by_nine",
+      "is_nullable": "YES",
+      "data_type": "decimal",
+      "column_type": "decimal(21,9)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_decimal_three_by_two",
+      "is_nullable": "YES",
+      "data_type": "decimal",
+      "column_type": "decimal(3,2)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_longtext",
+      "is_nullable": "YES",
+      "data_type": "longtext",
+      "column_type": "longtext",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "_nullable_text_underscore",
+      "is_nullable": "YES",
+      "data_type": "text",
+      "column_type": "text",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nullable_varchar_width_four",
+      "is_nullable": "YES",
+      "data_type": "varchar",
+      "column_type": "varchar(4)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "nulable_varchar_width_nine_nine_five",
+      "is_nullable": "YES",
+      "data_type": "varchar",
+      "column_type": "varchar(995)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "varchar_width_one_four_zero",
+      "is_nullable": "NO",
+      "data_type": "varchar",
+      "column_type": "varchar(140)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    },
+    {
+      "table_name": "tabUnitTest",
+      "column_name": "varchar_width_two_five_five",
+      "is_nullable": "NO",
+      "data_type": "varchar",
+      "column_type": "varchar(255)",
+      "module": "UnitTestingOnly",
+      "doctype": "TestType"
+    }
+  ]
+}

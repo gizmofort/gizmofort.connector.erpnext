@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using GizmoFort.Connector.ERPNext.PublicTypes;
+using GizmoFort.Connector.ERPNext.Serialization;
 using GizmoFort.Connector.ERPNext.Utils;
 
 namespace GizmoFort.Connector.ERPNext.WrapperTypes
@@ -41,48 +45,70 @@ namespace GizmoFort.Connector.ERPNext.WrapperTypes
         }
 
 
-        //
-        // reference: https://stackoverflow.com/questions/26429612/retrieve-name-value-from-columnattribute-for-entity-framework-batch-deletes
-        //
-        public static string? GetColumnName<T>(string propertyName)
+        public static T? Deserialize<T>(string value, JsonSerializerOptions? _options = null)
         {
-            string? result = null;
+            //
+            // deserialization is straight-forward... setters will only be called if values
+            // are included in the json string
+            //
+            // also, the date time formats TO ERPNext/mariadb will be in the
+            // server timezone. So set the server to UTC and convert assuming UTC
+            //
 
-            if (string.IsNullOrWhiteSpace(propertyName))
-            {
-                throw new ArgumentNullException(nameof(propertyName), "'propertyName' cannot be null or empty.");
-            }
+            _options ??= new JsonSerializerOptions();
+            _options.Converters.Add(new ERPNextObjectBaseDateTimeConverter());
+            _options.Converters.Add(new ERPNextObjectBaseDateTimeOffsetConverter());
+            var result = typeof(JsonSerializer)
+                            .GetMethod("Deserialize", new Type[] { typeof(string), typeof(JsonSerializerOptions) } )!
+                            .MakeGenericMethod(new Type[] { typeof(T) })
+                            .Invoke(null, new object[] { value, _options });
+            return (T?)result;
+        }
 
-            var classType = typeof(T);
-            var properties = classType.GetProperties(BindingFlags.GetProperty
-                                                     | BindingFlags.Instance
-                                                     | BindingFlags.Public);
+        public static object? Deserialize(string value, Type type, JsonSerializerOptions? _options = null)
+        {
+            //
+            // deserialization is straight-forward... setters will only be called if values
+            // are included in the json string
+            //
+            // also, the date time formats TO ERPNext/mariadb will be in the
+            // server timezone. So set the server to UTC and convert assuming UTC
+            //
 
-            var property = properties
-              .Where(p => p.Name.Equals(propertyName,
-                                        StringComparison.CurrentCultureIgnoreCase))
-              .FirstOrDefault();
+            _options ??= new JsonSerializerOptions();
+            _options.Converters.Add(new ERPNextObjectBaseDateTimeConverter());
+            _options.Converters.Add(new ERPNextObjectBaseDateTimeOffsetConverter());
+            return JsonSerializer.Deserialize(value, type, (JsonSerializerOptions)_options);
 
-            if (property == null)
-            {
-                throw new Exception("PropertyName not found."); // bad example
-            }
-            else
-            {
-                result = property.Name;  //if no column attribute exists;
+        }
 
-                var attributes = property.GetCustomAttributes();
+        public static string Serialize(ERPNextObjectBase value, JsonSerializerOptions? _options = null)
+        {
+            //
+            // serializtion is more complex... will need to serialize the data
+            // property ONLY, but map the names and values to the exposed property names and values
+            //
+            // also, the date time formats FROM ERPNext/mariadb will be in the
+            // server timezone. So set the server to UTC and convert assuming UTC
+            //
 
-                var attribute = attributes
-                                  .Where(a => a is ColumnAttribute)
-                                  .FirstOrDefault() as ColumnAttribute;
+            //Type policyGenericWithType = typeof(CustomJsonNamingPolicy<>).MakeGenericType(new Type[] { value.GetType() });
+            //var policy = Activator.CreateInstance(policyGenericWithType)!;
 
-                if (attribute != null)
-                {
-                    result = attribute.Name;
-                }
-            }
-            return result;
+            //var enhancedOptions = _options ?? new JsonSerializerOptions();
+            //enhancedOptions.DictionaryKeyPolicy = (JsonNamingPolicy)policy;
+
+            //var castValue = (ERPNextObjectBase)value;
+
+            Type converterGenericWithType = typeof(ERPNextObjectBaseJsonConverter<>).MakeGenericType(new Type[] { value.GetType() });
+            var converter = (JsonConverter)Activator.CreateInstance(converterGenericWithType)!;
+
+            _options ??= new JsonSerializerOptions();
+            _options.Converters.Add(converter);
+            _options.Converters.Add(new ERPNextObjectBaseDateTimeOffsetConverter());
+            _options.Converters.Add(new ERPNextObjectBaseDateTimeConverter());
+
+            return JsonSerializer.Serialize(value, _options);
         }
 
 

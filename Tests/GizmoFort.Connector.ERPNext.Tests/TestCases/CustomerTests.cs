@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GizmoFort.Connector.ERPNext.ERPTypes.Selling.Customer;
 using GizmoFort.Connector.ERPNext.PublicTypes;
+using GizmoFort.Connector.ERPNext.Serialization;
 using GizmoFort.Connector.ERPNext.WrapperTypes;
 using Xunit;
 
@@ -19,11 +20,11 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
 
             var initial_data = new ERP_Selling_Customer
             {
-                CustomerType2 = ERP_Selling_Customer.CustomerTypeEnum.Individual,
+                CustomerTypeViaEnum = ERP_Selling_Customer.CustomerTypeEnum.Individual,
                 CustomerName = test_customer_name,
                 CustomerGroup = "Individual",
                 Website = test_customer_website,
-                Territory = "Australia"
+                Territory = "United States"
             };
 
             #region Test - Insert
@@ -89,12 +90,9 @@ namespace GizmoFort.Connector.ERPNext.Tests.TestCases
             client.DeleteObject(DocType.Selling_Customer, test_customer_name);
 
             var option = new FetchListOption();
-            //option.Filters.Add(new ERPFilter(DocType.Selling_Customer,
-            //                                 nameof(ERP_Selling_Customer.CustomerName), //does not work... return CustomerName instead of customer_name
-            //                                 OperatorFilter.Equals,
-            //                                 test_customer_name)) ;
+            var columnInfo = ERPNextConverter.GetColumnInfoByPropertyName<ERP_Selling_Customer>(nameof(ERP_Selling_Customer.CustomerName));
             option.Filters.Add(new ERPFilter(DocType.Selling_Customer,
-                                             ERP_Selling_Customer.GetColumnName(nameof(ERP_Selling_Customer.CustomerName))!,
+                                             columnInfo?.ColumnName!,
                                              OperatorFilter.Equals,
                                              test_customer_name));
 

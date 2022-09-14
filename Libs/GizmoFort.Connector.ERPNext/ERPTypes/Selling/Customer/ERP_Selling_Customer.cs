@@ -4,6 +4,7 @@
 ********************************************************************/
 
 using GizmoFort.Connector.ERPNext.WrapperTypes;
+using System.Text.Json.Serialization;
 
 namespace GizmoFort.Connector.ERPNext.ERPTypes.Selling.Customer
 {
@@ -27,14 +28,15 @@ namespace GizmoFort.Connector.ERPNext.ERPTypes.Selling.Customer
             {
                 Name = fullName,
                 CustomerName = fullName,
-                CustomerType2 = customerType,
+                CustomerTypeViaEnum = customerType,
                 CustomerGroup = customerGroup,
                 Territory = territory,
             };
             return obj;
         }
 
-        public CustomerTypeEnum CustomerType2
+        [JsonIgnore]
+        public CustomerTypeEnum CustomerTypeViaEnum
         {
             get
             {

@@ -746,6 +746,7 @@ namespace GizmoFort.Connector.ERPNext.PublicTypes
         public static readonly DocType Workflow_WorkflowDocumentState = new("Workflow Document State");
         public static readonly DocType Workflow_WorkflowState = new("Workflow State");
         public static readonly DocType Workflow_WorkflowTransition = new("Workflow Transition");
+        public static readonly DocType UnitTestingOnly_TestType = new("TestType");
 
 
     }

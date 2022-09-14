@@ -139,7 +139,7 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
 
             var request = new RestRequest($"/api/resource/{obj.ObjectType}", Method.Post);
 
-            var args_text = JsonSerializer.Serialize(obj.Data);
+            string args_text = JsonSerializer.Serialize(obj.Data);
             //request.AddParameter("data", args_text);
             RestRequestExtensions.AddParameter(request, "data", args_text);
 
@@ -178,7 +178,7 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
             LoginIfNeeded();
 
             var request = new RestRequest($"/api/resource/{docType}/{name}", Method.Put);
-            var args_text = JsonSerializer.Serialize(obj.Data);
+            string args_text = JsonSerializer.Serialize(obj.Data);
             //request.AddParameter("data", args_text);
             RestRequestExtensions.AddParameter(request, "data", args_text);
 
@@ -210,13 +210,13 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
 
             var filters = listOption.Filters ?? new List<ERPFilter>();
             if (filters.Any()) {
-                var filter_val = JsonSerializer.Serialize(filters.Select(ToFilterObject).ToList());
+                string filter_val = JsonSerializer.Serialize(filters.Select(ToFilterObject).ToList());
                 request.AddParameter("filters", filter_val);
             }
 
             var included_fields = listOption.IncludedFields ?? new List<string>();
             if (included_fields.Any()) {
-                var filter_val = JsonSerializer.Serialize(included_fields.ToList());
+                string filter_val = JsonSerializer.Serialize(included_fields.ToList());
                 request.AddParameter("fields", filter_val);
             }
 
@@ -295,22 +295,21 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
         {
             var result = new ExpandoObject();
 
-            var iface = (IDictionary<string, object?>) result;
+            var resultViaIDictionary = (IDictionary<string, object?>) result;
 
             foreach (var pair in vals)
             {
                 object? value;
+
                 if (pair.Value is JsonElement)
                     value = JsonElementValue((JsonElement)pair.Value);
                 else
                     value = pair.Value;
                     
                 if (value is IDictionary<string, object?>)
-                {
                     value = ConvertToData((IDictionary<string, object?>)value);
-                }
 
-                iface[pair.Key] = value;
+                resultViaIDictionary[pair.Key] = value;
             }
 
             return result;
@@ -331,12 +330,14 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                     String? srcDataString = element.GetRawText();
                     if (srcDataString is null)
                         result = null;
-                    else if (double.TryParse(srcDataString, out _))
-                        result = element.GetDouble();
                     else if (int.TryParse(srcDataString, out _))
                         result = element.GetInt32();
+                    else if (long.TryParse(srcDataString, out _))
+                        result = element.GetInt64();
+                    else if (decimal.TryParse(srcDataString, out _))
+                        result = element.GetDecimal();
                     else
-                        result = null;
+                        result = element; //TODO
                     break;
                 case JsonValueKind.False:
                     result = false;
@@ -345,7 +346,7 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                     result = true;
                     break;
                 case JsonValueKind.Undefined:
-                    result = null;
+                    result = element; //TODO
                     break;
                 case JsonValueKind.String:
                     result = element.GetString();
@@ -359,7 +360,7 @@ namespace GizmoFort.Connector.ERPNext.PublicInterfaces
                         .ToArray();
                     break;
                 default:
-                    result = null;
+                    result = element; //TODO
                     break;
             }
             return result;
